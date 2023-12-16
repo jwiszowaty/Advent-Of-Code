@@ -35,7 +35,7 @@ fs.readFile('./1-trebuchet/1-trebuchet.txt', 'utf-8')
         const result2 = makeTwoDigitStrings(result1)
         const result3 = makeTwoDigitNums(result2)
         const result4 = add(result3)
-        console.log(result4)
+        // console.log(result4)
     })
     .catch((error) => console.log(error))
 

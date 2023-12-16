@@ -1,5 +1,6 @@
 const { matchNums, makeTwoDigitStrings, makeTwoDigitNums, add } = require("./1-trebuchet/1-trebuchet.js");
-
+const { toArray, removeImpossibleResults, addIndexes } = require("./2-cube-conundrum/part-1/cube-conundrum-2-1.js")
+const { organiseResults, orderResults, reduceResults, multiplyResults, addResults } = require("./2-cube-conundrum/part-2/cube-conundrum-2-2.js")
 describe("1-trebuchet", () => {
     test("the data is an array of rows", () => {
         const data = "1abc2\npqr3stu8vwx\na1b2c3d4e5f\ntreb7uchet"
@@ -84,3 +85,61 @@ describe("1-trebuchet", () => {
         expect(sum4).toEqual(142)
     });
 });
+describe("2-Cube Conundrum Part 1", () => {
+    const testInput = "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green\nGame 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue\nGame 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red\nGame 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red\nGame 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"
+    test("the input data is formatted to an array of games", () => {
+        const gamesResults = toArray(testInput)
+        console.log(gamesResults);
+        expect(gamesResults).toHaveLength(5)
+        expect(typeof gamesResults).toBe("object")
+    })
+    test("no string can include >12 red or >13 green or >14 blue", () => {
+        const gamesResults = toArray(testInput)
+        const possibleGamesIndexes = removeImpossibleResults(gamesResults)
+        expect(possibleGamesIndexes).toEqual([1, 2, 0, 0, 5])
+    })
+    test("the sum of indexes of possible games is correctly calculated", () => {
+        const gamesResults = toArray(testInput)
+        const possibleGamesIndexes = removeImpossibleResults(gamesResults)
+        const indexesSum = addIndexes(possibleGamesIndexes)
+        expect(indexesSum).toEqual(8)
+    })
+})
+describe.only("2-Cube Conundrum Part 2", () => {
+    const testInput = "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green\nGame 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue\nGame 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red\nGame 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red\nGame 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"
+    test("organise the games' results by colours and number of cubes", () => {
+        const gamesResults = toArray(testInput)
+        const resultsSummaries = organiseResults(gamesResults)
+        expect(resultsSummaries).toEqual([[[4, 1], [2, 2], [3, 6]], [[1], [2, 3, 1], [1, 4, 1]], [[20, 4, 1], [8, 13, 5], [6, 5]], [[3, 6, 14], [1, 3, 3], [6, 15]], [[6, 1], [3, 2], [1, 2]]])
+    })
+    test("colour sets from each game are sorted in descending order", () => {
+        const gamesResults = toArray(testInput)
+        const resultsSummaries = organiseResults(gamesResults)
+        const orderedSummaries = orderResults(resultsSummaries)
+        expect(orderedSummaries).toEqual([[[4, 1], [2, 2], [6, 3]], [[1], [3, 2, 1], [4, 1, 1]], [[20, 4, 1], [13, 8, 5], [6, 5]], [[14, 6, 3], [3, 3, 1], [15, 6]], [[6, 1], [3, 2], [2, 1]]])
+    })
+    test("only highest number is taken for each colour in each game", () => {
+        const gamesResults = toArray(testInput)
+        const resultsSummaries = organiseResults(gamesResults)
+        const orderedSummaries = orderResults(resultsSummaries)
+        const reducedSummaries = reduceResults(orderedSummaries)
+        expect(reducedSummaries).toEqual([[4, 2, 6], [1, 3, 4], [20, 13, 6], [14, 3, 15], [6, 3, 2]])
+    })
+    test("multiply the obtained numbers for each game", () => {
+        const gamesResults = toArray(testInput)
+        const resultsSummaries = organiseResults(gamesResults)
+        const orderedSummaries = orderResults(resultsSummaries)
+        const reducedSummaries = reduceResults(orderedSummaries)
+        const multipliedSummaries = multiplyResults(reducedSummaries)
+        expect(multipliedSummaries).toEqual([48, 12, 1560, 630, 36])
+    })
+    test("add the array of numbers obtained", () => {
+        const gamesResults = toArray(testInput)
+        const resultsSummaries = organiseResults(gamesResults)
+        const orderedSummaries = orderResults(resultsSummaries)
+        const reducedSummaries = reduceResults(orderedSummaries)
+        const multipliedSummaries = multiplyResults(reducedSummaries)
+        const addedSummaries = addResults(multipliedSummaries)
+        expect(addedSummaries).toBe(2286)
+    })
+})

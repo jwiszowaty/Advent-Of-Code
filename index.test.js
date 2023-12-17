@@ -1,3 +1,4 @@
+const fs = require("fs")
 const { matchNums, makeTwoDigitStrings, makeTwoDigitNums, add } = require("./1-trebuchet/1-trebuchet.js");
 const { toArray, removeImpossibleResults, addIndexes } = require("./2-cube-conundrum/part-1/cube-conundrum-2-1.js")
 const { organiseResults, orderResults, reduceResults, multiplyResults, addResults } = require("./2-cube-conundrum/part-2/cube-conundrum-2-2.js")
@@ -105,7 +106,7 @@ describe("2-Cube Conundrum Part 1", () => {
         expect(indexesSum).toEqual(8)
     })
 })
-describe.only("2-Cube Conundrum Part 2", () => {
+describe("2-Cube Conundrum Part 2", () => {
     const testInput = "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green\nGame 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue\nGame 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red\nGame 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red\nGame 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"
     test("organise the games' results by colours and number of cubes", () => {
         const gamesResults = toArray(testInput)
@@ -141,5 +142,11 @@ describe.only("2-Cube Conundrum Part 2", () => {
         const multipliedSummaries = multiplyResults(reducedSummaries)
         const addedSummaries = addResults(multipliedSummaries)
         expect(addedSummaries).toBe(2286)
+    })
+})
+describe("3-Gear Ratios", () => {
+    const dataInput = fs.readFileSync("./3-gear-ratios/test.txt", "utf8")
+    test("input data to array", () => {
+        const dataArr = toArray(dataInput)
     })
 })

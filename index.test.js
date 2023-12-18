@@ -2,6 +2,7 @@ const fs = require("fs")
 const { matchNums, makeTwoDigitStrings, makeTwoDigitNums, add } = require("./1-trebuchet/1-trebuchet.js");
 const { toArray, removeImpossibleResults, addIndexes } = require("./2-cube-conundrum/part-1/cube-conundrum-2-1.js")
 const { organiseResults, orderResults, reduceResults, multiplyResults, addResults } = require("./2-cube-conundrum/part-2/cube-conundrum-2-2.js")
+const { findNums, collectInfo, findAdjacent, sumEngineParts } = require("./3-gear-ratios/gear-ratios.js")
 describe("1-trebuchet", () => {
     test("the data is an array of rows", () => {
         const data = "1abc2\npqr3stu8vwx\na1b2c3d4e5f\ntreb7uchet"
@@ -144,9 +145,168 @@ describe("2-Cube Conundrum Part 2", () => {
         expect(addedSummaries).toBe(2286)
     })
 })
-describe("3-Gear Ratios", () => {
+describe.only("3-Gear Ratios", () => {
     const dataInput = fs.readFileSync("./3-gear-ratios/test.txt", "utf8")
     test("input data to array", () => {
         const dataArr = toArray(dataInput)
+        expect(dataArr).toEqual(['467..114..','...*......','..35..633.','......#...','617*......','.....+.58.','..592.....','......755.','...$.*....','.664.598..'])
+    })
+    test("extract numbers which are in contact with a character other than a dot", () => {
+        const dataArr = toArray(dataInput)
+        const nums = findNums(dataArr)
+        expect(nums).toEqual([[467, 114], [], [35, 633], [], [617], [58], [592], [755], [], [664, 598]])
+    })
+    test("create data object on each number found(line index, number index in the line)", () => {
+        const dataArr = toArray(dataInput)
+        const nums = findNums(dataArr)
+        const numsInfo = collectInfo(nums, dataArr)
+        expect(numsInfo).toEqual({
+            "0.0": {
+                num: 467,
+                length: 3,
+                line: 0,
+                index: 0,
+            },
+            "0.5": {
+                num: 114,
+                length: 3,
+                line: 0,
+                index: 5,
+            },
+            "2.2": {
+                num: 35,
+                length: 2,
+                line: 2,
+                index: 2,
+            },
+            "2.6": {
+                num: 633,
+                length: 3,
+                line: 2,
+                index: 6,
+            },
+            "4.0": {
+                num: 617,
+                length: 3,
+                line: 4,
+                index: 0,
+            },
+            "5.7": {
+                num: 58,
+                length: 2,
+                line: 5,
+                index: 7,
+            },
+            "6.2": {
+                num: 592,
+                length: 3,
+                line: 6,
+                index: 2,
+            },
+            "7.6": {
+                num: 755,
+                length: 3,
+                line: 7,
+                index: 6,
+            },
+            "9.1": {
+                num: 664,
+                length: 3,
+                line: 9,
+                index: 1,
+            },
+            "9.5": {
+                num: 598,
+                length: 3,
+                line: 9,
+                index: 5,
+            }
+            })
+    })
+    test("find each number's adjacent characters", () => {
+        const dataArr = toArray(dataInput)
+        const nums = findNums(dataArr)
+        const numsInfo = collectInfo(nums, dataArr)
+        const adjacentChars = findAdjacent(numsInfo, dataArr)
+        expect(adjacentChars).toEqual({
+            "0.0": {
+                num: 467,
+                length: 3,
+                line: 0,
+                index: 0,
+                adjacent: "467....*"
+            },
+            "0.5": {
+                num: 114,
+                length: 3,
+                line: 0,
+                index: 5,
+                adjacent: ".114......"
+            },
+            "2.2": {
+                num: 35,
+                length: 2,
+                line: 2,
+                index: 2,
+                adjacent: "..*..35....."
+            },
+            "2.6": {
+                num: 633,
+                length: 3,
+                line: 2,
+                index: 6,
+                adjacent: "......633..#..."
+            },
+            "4.0": {
+                num: 617,
+                length: 3,
+                line: 4,
+                index: 0,
+                adjacent: "....617*...."
+            },
+            "5.7": {
+                num: 58,
+                length: 2,
+                line: 5,
+                index: 7,
+                adjacent: ".....58....."
+            },
+            "6.2": {
+                num: 592,
+                length: 3,
+                line: 6,
+                index: 2,
+                adjacent: "....+.592......"
+            },
+            "7.6": {
+                num: 755,
+                length: 3,
+                line: 7,
+                index: 6,
+                adjacent: "......755.*...."
+            },
+            "9.1": {
+                num: 664,
+                length: 3,
+                line: 9,
+                index: 1,
+                adjacent: "...$..664."
+            },
+            "9.5": {
+                num: 598,
+                length: 3,
+                line: 9,
+                index: 5,
+                adjacent: ".*....598."
+            }
+            })
+    })
+    test("sum only numbers with adjacent symbols", () => {
+        const dataArr = toArray(dataInput)
+        const nums = findNums(dataArr)
+        const numsInfo = collectInfo(nums, dataArr)
+        const adjacentChars = findAdjacent(numsInfo, dataArr)
+        const engineParts = sumEngineParts(adjacentChars)
+        expect(engineParts).toBe(4361)
     })
 })

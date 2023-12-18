@@ -50,5 +50,4 @@ const orderedSummaries = orderResults(resultsSummaries)
 const reducedSummaries = reduceResults(orderedSummaries)
 const multipliedSummaries = multiplyResults(reducedSummaries)
 const addedSummaries = addResults(multipliedSummaries)
-console.log(addedSummaries);
 module.exports = { organiseResults, orderResults, reduceResults, multiplyResults, addResults }

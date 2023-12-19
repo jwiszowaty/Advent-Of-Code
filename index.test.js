@@ -2,7 +2,8 @@ const fs = require("fs")
 const { matchNums, makeTwoDigitStrings, makeTwoDigitNums, add } = require("./1-trebuchet/1-trebuchet.js");
 const { toArray, removeImpossibleResults, addIndexes } = require("./2-cube-conundrum/part-1/cube-conundrum-2-1.js")
 const { organiseResults, orderResults, reduceResults, multiplyResults, addResults } = require("./2-cube-conundrum/part-2/cube-conundrum-2-2.js")
-const { findNums, collectInfo, findAdjacent, sumEngineParts } = require("./3-gear-ratios/gear-ratios.js")
+const { toArray3, findEngineParts, sumEngineParts } = require("./3-gear-ratios/part-1/gear-ratios-1.js")
+const { findStars, collectNumsAdjacent } = require("./3-gear-ratios/part-2/gear-ratios-2.js")
 describe("1-trebuchet", () => {
     test("the data is an array of rows", () => {
         const data = "1abc2\npqr3stu8vwx\na1b2c3d4e5f\ntreb7uchet"
@@ -145,168 +146,35 @@ describe("2-Cube Conundrum Part 2", () => {
         expect(addedSummaries).toBe(2286)
     })
 })
-describe.only("3-Gear Ratios", () => {
+describe("3-Gear Ratios Part 1", () => {
     const dataInput = fs.readFileSync("./3-gear-ratios/test.txt", "utf8")
     test("input data to array", () => {
-        const dataArr = toArray(dataInput)
-        expect(dataArr).toEqual(['467..114..','...*......','..35..633.','......#...','617*......','.....+.58.','..592.....','......755.','...$.*....','.664.598..'])
+        const dataArr = toArray3(dataInput)
+        expect(dataArr).toEqual([["4","6","7",".",".","1","1","4",".",".",],[".",".",".","*",".",".",".",".",".",".",],[".",".","3","5",".",".","6","3","3",".",],[".",".",".",".",".",".","#",".",".",".",],["6","1","7","*",".",".",".",".",".",".",],[".",".",".",".",".","+",".","5","8",".",],[".",".","5","9","2",".",".",".",".",".",],[".",".",".",".",".",".","7","5","5",".",],[".",".",".","$",".","*",".",".",".",".",],[".","6","6","4",".","5","9","8",".",".",]])
     })
-    test("extract numbers which are in contact with a character other than a dot", () => {
-        const dataArr = toArray(dataInput)
-        const nums = findNums(dataArr)
-        expect(nums).toEqual([[467, 114], [], [35, 633], [], [617], [58], [592], [755], [], [664, 598]])
-    })
-    test("create data object on each number found(line index, number index in the line)", () => {
-        const dataArr = toArray(dataInput)
-        const nums = findNums(dataArr)
-        const numsInfo = collectInfo(nums, dataArr)
-        expect(numsInfo).toEqual({
-            "0.0": {
-                num: 467,
-                length: 3,
-                line: 0,
-                index: 0,
-            },
-            "0.5": {
-                num: 114,
-                length: 3,
-                line: 0,
-                index: 5,
-            },
-            "2.2": {
-                num: 35,
-                length: 2,
-                line: 2,
-                index: 2,
-            },
-            "2.6": {
-                num: 633,
-                length: 3,
-                line: 2,
-                index: 6,
-            },
-            "4.0": {
-                num: 617,
-                length: 3,
-                line: 4,
-                index: 0,
-            },
-            "5.7": {
-                num: 58,
-                length: 2,
-                line: 5,
-                index: 7,
-            },
-            "6.2": {
-                num: 592,
-                length: 3,
-                line: 6,
-                index: 2,
-            },
-            "7.6": {
-                num: 755,
-                length: 3,
-                line: 7,
-                index: 6,
-            },
-            "9.1": {
-                num: 664,
-                length: 3,
-                line: 9,
-                index: 1,
-            },
-            "9.5": {
-                num: 598,
-                length: 3,
-                line: 9,
-                index: 5,
-            }
-            })
-    })
-    test("find each number's adjacent characters", () => {
-        const dataArr = toArray(dataInput)
-        const nums = findNums(dataArr)
-        const numsInfo = collectInfo(nums, dataArr)
-        const adjacentChars = findAdjacent(numsInfo, dataArr)
-        expect(adjacentChars).toEqual({
-            "0.0": {
-                num: 467,
-                length: 3,
-                line: 0,
-                index: 0,
-                adjacent: "467....*"
-            },
-            "0.5": {
-                num: 114,
-                length: 3,
-                line: 0,
-                index: 5,
-                adjacent: ".114......"
-            },
-            "2.2": {
-                num: 35,
-                length: 2,
-                line: 2,
-                index: 2,
-                adjacent: "..*..35....."
-            },
-            "2.6": {
-                num: 633,
-                length: 3,
-                line: 2,
-                index: 6,
-                adjacent: "......633..#..."
-            },
-            "4.0": {
-                num: 617,
-                length: 3,
-                line: 4,
-                index: 0,
-                adjacent: "....617*...."
-            },
-            "5.7": {
-                num: 58,
-                length: 2,
-                line: 5,
-                index: 7,
-                adjacent: ".....58....."
-            },
-            "6.2": {
-                num: 592,
-                length: 3,
-                line: 6,
-                index: 2,
-                adjacent: "....+.592......"
-            },
-            "7.6": {
-                num: 755,
-                length: 3,
-                line: 7,
-                index: 6,
-                adjacent: "......755.*...."
-            },
-            "9.1": {
-                num: 664,
-                length: 3,
-                line: 9,
-                index: 1,
-                adjacent: "...$..664."
-            },
-            "9.5": {
-                num: 598,
-                length: 3,
-                line: 9,
-                index: 5,
-                adjacent: ".*....598."
-            }
-            })
+    test("extract parts' numbers", () => {
+        const dataArr = toArray3(dataInput)
+        const partsNums = findEngineParts(dataArr)
+        expect(partsNums).toEqual([467, 35, 633, 617, 592, 755, 664, 598])
     })
     test("sum only numbers with adjacent symbols", () => {
-        const dataArr = toArray(dataInput)
-        const nums = findNums(dataArr)
-        const numsInfo = collectInfo(nums, dataArr)
-        const adjacentChars = findAdjacent(numsInfo, dataArr)
-        const engineParts = sumEngineParts(adjacentChars)
-        expect(engineParts).toBe(4361)
+        const dataArr = toArray3(dataInput)
+        const partsNums = findEngineParts(dataArr)
+        const sum = sumEngineParts(partsNums)
+        expect(sum).toBe(4361)
+    })
+})
+describe.only("3-Gear Ratios Part 2", () => {
+    const dataInput = fs.readFileSync("./3-gear-ratios/test.txt", "utf8")
+    test("find where the stars are located in the input data", () => {
+        const dataArr = toArray3(dataInput)
+        const starsLocation = findStars(dataArr)
+        expect(starsLocation).toEqual([[1,3], [4,3], [8,5]])
+    })
+    test("collect numbers adjacent to each star", () => {
+        const dataArr = toArray3(dataInput)
+        const starsIndexes = findStars(dataArr)
+        const numsAdjacentToStars = collectNumsAdjacent(starsIndexes,dataArr)
+        expect(numsAdjacentToStars).toEqual([[467, 35], [617], [755, 598]])
     })
 })

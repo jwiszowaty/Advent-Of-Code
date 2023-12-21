@@ -3,7 +3,7 @@ const { matchNums, makeTwoDigitStrings, makeTwoDigitNums, add } = require("./1-t
 const { toArray, removeImpossibleResults, addIndexes } = require("./2-cube-conundrum/part-1/cube-conundrum-2-1.js")
 const { organiseResults, orderResults, reduceResults, multiplyResults, addResults } = require("./2-cube-conundrum/part-2/cube-conundrum-2-2.js")
 const { toArray3, findEngineParts, sumEngineParts } = require("./3-gear-ratios/part-1/gear-ratios-1.js")
-const { findStars, collectNumsAdjacent } = require("./3-gear-ratios/part-2/gear-ratios-2.js")
+const { findStars, collectNumsAdjacent, filterGears, sumParts } = require("./3-gear-ratios/part-2/gear-ratios-2.js")
 describe("1-trebuchet", () => {
     test("the data is an array of rows", () => {
         const data = "1abc2\npqr3stu8vwx\na1b2c3d4e5f\ntreb7uchet"
@@ -176,5 +176,20 @@ describe.only("3-Gear Ratios Part 2", () => {
         const starsIndexes = findStars(dataArr)
         const numsAdjacentToStars = collectNumsAdjacent(starsIndexes,dataArr)
         expect(numsAdjacentToStars).toEqual([[467, 35], [617], [755, 598]])
+    })
+    test("filter only gear parts", () => {
+        const dataArr = toArray3(dataInput)
+        const starsIndexes = findStars(dataArr)
+        const numsAdjacentToStars = collectNumsAdjacent(starsIndexes, dataArr)
+        const gearParts = filterGears(numsAdjacentToStars)
+        expect(gearParts).toEqual([[467, 35], [755, 598]])
+    })
+    test("add up the multiplied pairs", () => {
+        const dataArr = toArray3(dataInput)
+        const starsIndexes = findStars(dataArr)
+        const numsAdjacentToStars = collectNumsAdjacent(starsIndexes, dataArr)
+        const gearParts = filterGears(numsAdjacentToStars)
+        const sum = sumParts(gearParts)
+        expect(sum).toBe(467835)
     })
 })

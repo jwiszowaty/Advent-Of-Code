@@ -3,7 +3,9 @@ const { matchNums, makeTwoDigitStrings, makeTwoDigitNums, add } = require("./1-t
 const { toArray, removeImpossibleResults, addIndexes } = require("./2-cube-conundrum/part-1/cube-conundrum-2-1.js")
 const { organiseResults, orderResults, reduceResults, multiplyResults, addResults } = require("./2-cube-conundrum/part-2/cube-conundrum-2-2.js")
 const { toArray3, findEngineParts, sumEngineParts } = require("./3-gear-ratios/part-1/gear-ratios-1.js")
-const { findStars, collectNumsAdjacent, filterGears, sumParts } = require("./3-gear-ratios/part-2/gear-ratios-2.js")
+const { findStarsGears, findTheNumbersAdjacentToStarsGears, sumParts } = require("./3-gear-ratios/part-2/gear-ratios-2.js")
+const { extractWinNums, extractRanNums, countMatched, calculatePoints, sumPoints } = require("./4-scratchcards/scratchcards-1.js")
+const { countMatchedPartTwo, addCards, countCards} = require("./4-scratchcards/scratchcards-2.js")
 describe("1-trebuchet", () => {
     test("the data is an array of rows", () => {
         const data = "1abc2\npqr3stu8vwx\na1b2c3d4e5f\ntreb7uchet"
@@ -92,7 +94,6 @@ describe("2-Cube Conundrum Part 1", () => {
     const testInput = "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green\nGame 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue\nGame 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red\nGame 4: 1 green, 3 red, 6 blue; 3 green, 6 red; 3 green, 15 blue, 14 red\nGame 5: 6 red, 1 blue, 3 green; 2 blue, 1 red, 2 green"
     test("the input data is formatted to an array of games", () => {
         const gamesResults = toArray(testInput)
-        console.log(gamesResults);
         expect(gamesResults).toHaveLength(5)
         expect(typeof gamesResults).toBe("object")
     })
@@ -164,32 +165,84 @@ describe("3-Gear Ratios Part 1", () => {
         expect(sum).toBe(4361)
     })
 })
-describe.only("3-Gear Ratios Part 2", () => {
+describe("3-Gear Ratios Part 2", () => {
     const dataInput = fs.readFileSync("./3-gear-ratios/test.txt", "utf8")
-    test("find where the stars are located in the input data", () => {
+    test("find where the stars gears are located in the input data", () => {
         const dataArr = toArray3(dataInput)
-        const starsLocation = findStars(dataArr)
-        expect(starsLocation).toEqual([[1,3], [4,3], [8,5]])
+        const starsLocation = findStarsGears(dataArr)
+        expect(starsLocation).toEqual([[1,3], [8,5]])
     })
-    test("collect numbers adjacent to each star", () => {
+    test("collect numbers adjacent to the stars gears", () => {
         const dataArr = toArray3(dataInput)
-        const starsIndexes = findStars(dataArr)
-        const numsAdjacentToStars = collectNumsAdjacent(starsIndexes,dataArr)
-        expect(numsAdjacentToStars).toEqual([[467, 35], [617], [755, 598]])
-    })
-    test("filter only gear parts", () => {
-        const dataArr = toArray3(dataInput)
-        const starsIndexes = findStars(dataArr)
-        const numsAdjacentToStars = collectNumsAdjacent(starsIndexes, dataArr)
-        const gearParts = filterGears(numsAdjacentToStars)
-        expect(gearParts).toEqual([[467, 35], [755, 598]])
+        const starsIndexes = findStarsGears(dataArr)
+        const numsAdjacentToStars = findTheNumbersAdjacentToStarsGears(starsIndexes,dataArr)
+        expect(numsAdjacentToStars).toEqual([[35, 467], [598, 755]])
     })
     test("add up the multiplied pairs", () => {
         const dataArr = toArray3(dataInput)
-        const starsIndexes = findStars(dataArr)
-        const numsAdjacentToStars = collectNumsAdjacent(starsIndexes, dataArr)
-        const gearParts = filterGears(numsAdjacentToStars)
-        const sum = sumParts(gearParts)
+        const starsIndexes = findStarsGears(dataArr)
+        const numsAdjacentToStars = findTheNumbersAdjacentToStarsGears(starsIndexes, dataArr)
+        const sum = sumParts(numsAdjacentToStars)
         expect(sum).toBe(467835)
+    })
+})
+describe("4-Scratchcards Part 1", () => {
+    const testInput = fs.readFileSync("./4-scratchcards/test.txt", "utf8")
+    test("create two array for winning numbers and random numbers", () => {
+        const winningNums = extractWinNums(testInput)
+        const randomNums = extractRanNums(testInput)
+        expect(winningNums).toEqual([[41, 48, 83, 86, 17],[13, 32, 20, 16, 61],[1, 21, 53, 59, 44],[41, 92, 73, 84, 69],[87, 83, 26, 28, 32],[31, 18, 13, 56, 72]])
+        expect(randomNums).toEqual([[83, 86, 6, 31, 17, 9, 48, 53], [61, 30, 68, 82, 17, 32, 24, 19], [69, 82, 63, 72, 16, 21, 14, 1], [59, 84, 76, 51, 58, 5, 54, 83], [88, 30, 70, 12, 93, 22, 82, 36], [74, 77, 10, 23, 35, 67, 36, 11]])
+    })
+    test("count how many random numbers match with winning numbers", () => {
+        const winningNums = extractWinNums(testInput)
+        const randomNums = extractRanNums(testInput)
+        const numberOfMatchedNums = countMatched(randomNums, winningNums)
+        expect(numberOfMatchedNums).toEqual([4, 2, 2, 1, 0, 0])
+    })
+    test("calculate how many points for each card", () => {
+        const winningNums = extractWinNums(testInput)
+        const randomNums = extractRanNums(testInput)
+        const numberOfMatchedNums = countMatched(randomNums, winningNums)
+        const pointsForEachCard = calculatePoints(numberOfMatchedNums)
+        expect(pointsForEachCard).toEqual([8, 2, 2, 1, 0, 0])
+    })
+    test("sum of points from cards", () => {
+        const winningNums = extractWinNums(testInput)
+        const randomNums = extractRanNums(testInput)
+        const numberOfMatchedNums = countMatched(randomNums, winningNums)
+        const pointsForEachCard = calculatePoints(numberOfMatchedNums)
+        const sum = sumPoints(pointsForEachCard)
+        expect(sum).toBe(13)
+    })
+})
+describe("4-Scratchcards Part 2", () => {
+    const testInput = fs.readFileSync("./4-scratchcards/test.txt", "utf8")
+    test("create two array for winning numbers and random numbers", () => {
+        const winningNums = extractWinNums(testInput)
+        const randomNums = extractRanNums(testInput)
+        expect(winningNums).toEqual([[41, 48, 83, 86, 17],[13, 32, 20, 16, 61],[1, 21, 53, 59, 44],[41, 92, 73, 84, 69],[87, 83, 26, 28, 32],[31, 18, 13, 56, 72]])
+        expect(randomNums).toEqual([[83, 86, 6, 31, 17, 9, 48, 53], [61, 30, 68, 82, 17, 32, 24, 19], [69, 82, 63, 72, 16, 21, 14, 1], [59, 84, 76, 51, 58, 5, 54, 83], [88, 30, 70, 12, 93, 22, 82, 36], [74, 77, 10, 23, 35, 67, 36, 11]])
+    })
+    test("count how many random numbers match with winning numbers", () => {
+        const winningNums = extractWinNums(testInput)
+        const randomNums = extractRanNums(testInput)
+        const numberOfMatchedNums = countMatchedPartTwo(randomNums, winningNums)
+        expect(numberOfMatchedNums).toEqual([[4], [2], [2], [1], [0], [0]])
+    })
+    test("add cards according to the number of matched numbers on each card", () => {
+        const winningNums = extractWinNums(testInput)
+        const randomNums = extractRanNums(testInput)
+        const numberOfMatchedNums = countMatchedPartTwo(randomNums, winningNums)
+        const addedCards = addCards(numberOfMatchedNums)
+        expect(addedCards).toEqual([[4], [2,2], [2,2,2,2], [1,1,1,1,1,1,1,1], [0,0,0,0,0,0,0,0,0,0,0,0,0,0], [0]])
+    })
+    test("count the cards", () => {
+        const winningNums = extractWinNums(testInput)
+        const randomNums = extractRanNums(testInput)
+        const numberOfMatchedNums = countMatchedPartTwo(randomNums, winningNums)
+        const addedCards = addCards(numberOfMatchedNums)
+        const sum = countCards(addedCards)
+        expect(sum).toBe(30)
     })
 })

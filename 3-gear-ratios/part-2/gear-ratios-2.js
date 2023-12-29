@@ -6,7 +6,7 @@ const toArray3 = (data) => {
     })
     return chars
 }
-const findStars = (dataArr) => {
+const findStarsGears = (dataArr) => {
     const starsIndexes = []
     dataArr.forEach((line, lineIndex) => {
         line.forEach((char, charIndex) => {
@@ -19,6 +19,7 @@ const findStars = (dataArr) => {
                 const bottom = dataArr[lineIndex + 1][charIndex] ? dataArr[lineIndex + 1][charIndex] : "."
                 const bottomLeftCorner = dataArr[lineIndex + 1][charIndex - 1] ? dataArr[lineIndex + 1][charIndex - 1] : "."
                 const left = dataArr[lineIndex][charIndex - 1] ? dataArr[lineIndex][charIndex - 1] : "."
+
                 const aroundChars = topLeftCorner + top + topRightCorner + "." + right + "." + bottomLeftCorner + bottom + bottomRightCorner + "." + left
                 const filterStars = aroundChars.match(/\d+/g).length
                 if (filterStars === 2) {
@@ -29,7 +30,7 @@ const findStars = (dataArr) => {
     })
     return starsIndexes
 }
-const collectNumsAdjacent = (starsIndexes, dataArr) => {
+const findTheNumbersAdjacentToStarsGears = (starsIndexes, dataArr) => {
     const numsAdjacentToStars = []
     starsIndexes.forEach((star) => {
         const numsStar = []
@@ -45,6 +46,7 @@ const collectNumsAdjacent = (starsIndexes, dataArr) => {
         const left = dataArr[lineIndex][charIndex - 1] ? dataArr[lineIndex][charIndex - 1] : "A"
         const topRow = (topLeftCorner + top + topRightCorner)
         const bottomRow = (bottomLeftCorner + bottom + bottomRightCorner)
+        //Instance of two digits appearing in the row ABOVE the start, for example [digit][digit][non-digit], [non-digit][digit][digit] or [digit][non-digit][digit]
         if (/[0-9]{2}/.test(topRow) || /[0-9]{1}.[0-9]{1}/.test(topRow)) {
             if (/\d[^\d]\d/.test(topRow)) {
                 let number = []
@@ -68,6 +70,7 @@ const collectNumsAdjacent = (starsIndexes, dataArr) => {
             }
             
         }
+        //Instance of two digits appearing in the row BELOW the start, for example [digit][digit][non-digit], [non-digit][digit][digit] or [digit][non-digit][digit]
         if (/[0-9]{2}/.test(bottomRow)  || /[0-9]{1}.[0-9]{1}/.test(bottomRow)) {
             if (/\d[^\d]\d/.test(bottomRow)) {
                 let number = []
@@ -90,6 +93,7 @@ const collectNumsAdjacent = (starsIndexes, dataArr) => {
                 numsStar.push(+filteredNum[0])
             }
         }
+        //Instance of one digit appearing in the row ABOVE the start, for example [non-digit][non-digit][digit], [digit][non-digit][non-digit] or [non-digit][digit][non-digit]
         if (/[^\d]{2}\d/.test(topRow) || /\d[^\d]{2}/.test(topRow) || /[^\d]\d[^\d]/.test(topRow)) {
             if (/[^\d]\d[^\d]/.test(topRow)) {
                 numsStar.push(+top)
@@ -111,6 +115,7 @@ const collectNumsAdjacent = (starsIndexes, dataArr) => {
                 numsStar.push(+number.join(""))
             }
         }
+         //Instance of one digit appearing in the row BELOW the start, for example [non-digit][non-digit][digit], [digit][non-digit][non-digit] or [non-digit][digit][non-digit]
         if (/[^\d]{2}\d/.test(bottomRow) || /\d[^\d]{2}/.test(bottomRow)) {
             if (/\d[^\d]{2}/.test(bottomRow)) {
                 let number = []
@@ -129,6 +134,7 @@ const collectNumsAdjacent = (starsIndexes, dataArr) => {
                 numsStar.push(+number.join(""))
             }
         }
+        //Instance of a digit appearing to the RIGHT of the star
         if (/\d/.test(right)) {
             let number = []
             for (let index = 0; index < 3; index++) {
@@ -137,6 +143,7 @@ const collectNumsAdjacent = (starsIndexes, dataArr) => {
             }
             numsStar.push(+number.join(""))
         }
+        //Instance of a digit appearing to the LEFT of the star
         if (/\d/.test(left)) {
             let number = []
             for (let index = 0; index < 3; index++) {
@@ -156,11 +163,12 @@ const sumParts = (gearParts) => {
     const reduceGear = mapGear.reduce((acc, curr) => acc + curr)
     return reduceGear
 }
+
 const dataInput = fs.readFileSync('./3-gear-ratios/gear-ratios.txt', 'utf8')
 const dataArr = toArray3(dataInput)
-const starsIndexes = findStars(dataArr)
-const numsAdjacentToStars = collectNumsAdjacent(starsIndexes, dataArr)
+const starsIndexes = findStarsGears(dataArr)
+const numsAdjacentToStars = findTheNumbersAdjacentToStarsGears(starsIndexes, dataArr)
 const sum = sumParts(numsAdjacentToStars)
-console.log("sum",sum);
+// console.log("sum",sum);
 module.exports = {
-    findStars, collectNumsAdjacent, sumParts}
+    findStarsGears, findTheNumbersAdjacentToStarsGears, sumParts}

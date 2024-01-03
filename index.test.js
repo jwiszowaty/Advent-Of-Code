@@ -5,7 +5,8 @@ const { organiseResults, orderResults, reduceResults, multiplyResults, addResult
 const { toArray3, findEngineParts, sumEngineParts } = require("./3-gear-ratios/part-1/gear-ratios-1.js")
 const { findStarsGears, findTheNumbersAdjacentToStarsGears, sumParts } = require("./3-gear-ratios/part-2/gear-ratios-2.js")
 const { extractWinNums, extractRanNums, countMatched, calculatePoints, sumPoints } = require("./4-scratchcards/scratchcards-1.js")
-const { countMatchedPartTwo, addCards, countCards} = require("./4-scratchcards/scratchcards-2.js")
+const { countMatchedPartTwo, addCards, countCards } = require("./4-scratchcards/scratchcards-2.js")
+const { findBiggestSeedNumber, findSeedToSoil } = require("./5-fertiliser/fertiliser-1.js")
 describe("1-trebuchet", () => {
     test("the data is an array of rows", () => {
         const data = "1abc2\npqr3stu8vwx\na1b2c3d4e5f\ntreb7uchet"
@@ -244,5 +245,16 @@ describe("4-Scratchcards Part 2", () => {
         const addedCards = addCards(numberOfMatchedNums)
         const sum = countCards(addedCards)
         expect(sum).toBe(30)
+    })
+})
+describe.only("5-Seed Fertiliser Part 1", () => {
+    const dataInput = fs.readFileSync("./5-fertiliser/test.txt", "utf8")
+    test("returns seed with highest number", () => {
+        const lastSeed = findBiggestSeedNumber(dataInput);
+        expect(lastSeed).toBe(79)
+    })
+    test("extract seed-to-soil information each line as a separate element of the array", () => {
+        const seedToSoil = findSeedToSoil(dataInput)
+        expect(seedToSoil).toEqual([[50, 98, 2], [52, 50, 48]])
     })
 })

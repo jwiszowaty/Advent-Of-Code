@@ -51,5 +51,5 @@ const randomNums = extractRanNums(testInput)
 const numberOfMatchedNums = countMatchedPartTwo(randomNums, winningNums)
 const addedCards = addCards(numberOfMatchedNums)
 const sum = countCards(addedCards)
-console.log(sum);
+// console.log(sum);
 module.exports = { extractWinNums, extractRanNums, countMatchedPartTwo, addCards, countCards }

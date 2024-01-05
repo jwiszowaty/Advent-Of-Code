@@ -6,7 +6,7 @@ const { toArray3, findEngineParts, sumEngineParts } = require("./3-gear-ratios/p
 const { findStarsGears, findTheNumbersAdjacentToStarsGears, sumParts } = require("./3-gear-ratios/part-2/gear-ratios-2.js")
 const { extractWinNums, extractRanNums, countMatched, calculatePoints, sumPoints } = require("./4-scratchcards/scratchcards-1.js")
 const { countMatchedPartTwo, addCards, countCards } = require("./4-scratchcards/scratchcards-2.js")
-const { findBiggestSeedNumber, findSeedToSoil } = require("./5-fertiliser/fertiliser-1.js")
+const { findBiggestNumber, findSeedToSoil, findSoilToFertilizer, findFertilizerToWater, findWaterToLight, createSeeds, createSoil, findLightToTemp, findTempToHum, findHumToLoc} = require("./5-fertiliser/fertiliser-1.js")
 describe("1-trebuchet", () => {
     test("the data is an array of rows", () => {
         const data = "1abc2\npqr3stu8vwx\na1b2c3d4e5f\ntreb7uchet"
@@ -250,11 +250,47 @@ describe("4-Scratchcards Part 2", () => {
 describe.only("5-Seed Fertiliser Part 1", () => {
     const dataInput = fs.readFileSync("./5-fertiliser/test.txt", "utf8")
     test("returns seed with highest number", () => {
-        const lastSeed = findBiggestSeedNumber(dataInput);
-        expect(lastSeed).toBe(79)
+        const biggestNumber = findBiggestNumber(dataInput);
+        expect(biggestNumber).toBe(101)
     })
-    test("extract seed-to-soil information each line as a separate element of the array", () => {
+    test("extract information each line as a separate element of the array, ordered in ascending order based on the seed number", () => {
         const seedToSoil = findSeedToSoil(dataInput)
-        expect(seedToSoil).toEqual([[50, 98, 2], [52, 50, 48]])
+        expect(seedToSoil).toEqual([[52, 50, 48], [50, 98, 2]])
+
+        const soilToFertilizer= findSoilToFertilizer(dataInput)
+        expect(soilToFertilizer).toEqual([[39, 0, 15], [0, 15, 37], [37, 52, 2]])
+
+        const fertilizerToWater= findFertilizerToWater(dataInput)
+        expect(fertilizerToWater).toEqual([[42, 0, 7], [57, 7, 4], [0, 11, 42], [49, 53, 8]])
+
+        const waterToLight = findWaterToLight(dataInput)
+        expect(waterToLight).toEqual([[88, 18, 7], [18, 25, 70]])
+
+        const lightToTemp = findLightToTemp(dataInput)
+        expect(lightToTemp).toEqual([[81, 45, 19], [68, 64, 13], [45, 77, 23]])
+
+        const tempToHum = findTempToHum(dataInput)
+        expect(tempToHum).toEqual([[1, 0, 69], [0, 69, 1]])
+
+        const humToLoc = findHumToLoc(dataInput)
+        expect(humToLoc).toEqual([[60, 56, 37], [56, 93, 4]])
+    })
+    test("create objects which will hold information extracted from the data input", () => {
+        const biggestNumber = findBiggestNumber(dataInput);
+        const seedToSoil = findSeedToSoil(dataInput)
+        const seeds = createSeeds(biggestNumber, seedToSoil)
+        expect(seeds[49]).toBe(49)
+        expect(seeds[50]).toBe(52)
+        expect(seeds[51]).toBe(53)
+        expect(seeds[79]).toBe(81)
+
+        const soilToFertilizer= findSoilToFertilizer(dataInput)
+        const soil = createSoil(seeds, soilToFertilizer)
+        expect(soil[1]).toBe(40)
+        expect(soil[14]).toBe(53)
+        expect(soil[15]).toBe(0)
+        expect(soil[52]).toBe(37)
+        expect(soil[53]).toBe(38)
+        expect(soil[54]).toBe(54)
     })
 })

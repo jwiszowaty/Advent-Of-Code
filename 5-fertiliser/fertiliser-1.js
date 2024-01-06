@@ -17,7 +17,6 @@ const findSeedToSoil = (dataInput) => {
                 .map(number => +number)
         })
         .sort(([a, b, c], [d, e, f]) => b - e)
-    console.log("matched seeds to soil");
     return seedToSoil
 }
 const findSoilToFertilizer = (dataInput) => {
@@ -29,7 +28,6 @@ const findSoilToFertilizer = (dataInput) => {
                 .map(number => +number)
         })
         .sort(([a, b, c],[d, e, f]) => b - e)
-        console.log("matched soil to fertilizer");
     return soilToFertilizer
 }
 const findFertilizerToWater = (dataInput) => {
@@ -41,7 +39,6 @@ const findFertilizerToWater = (dataInput) => {
                 .map(number => +number)
         })
         .sort(([a, b, c],[d, e, f]) => b - e)
-        console.log("matched fertilizer to water");
     return fertilizerToWater
 }
 const findWaterToLight = (dataInput) => {
@@ -53,7 +50,6 @@ const findWaterToLight = (dataInput) => {
                 .map(number => +number)
         })
         .sort(([a, b, c],[d, e, f]) => b - e)
-        console.log("matched water to light");
     return waterToLight
 }
 const findLightToTemp = (dataInput) => {
@@ -65,7 +61,6 @@ const findLightToTemp = (dataInput) => {
                 .map(number => +number)
         })
         .sort(([a, b, c],[d, e, f]) => b - e)
-        console.log("matched light to temperature");
     return lightToTemp
 }
 const findTempToHum = (dataInput) => {
@@ -77,7 +72,6 @@ const findTempToHum = (dataInput) => {
             .map(number => +number)
     })
     .sort(([a, b, c],[d, e, f]) => b - e)
-    console.log("matched temperature to humidity");
     return tempToHum
 }
 const findHumToLoc = (dataInput) => {
@@ -89,136 +83,146 @@ const findHumToLoc = (dataInput) => {
                 .map(number => +number)
         })
     .sort(([a, b, c],[d, e, f]) => b - e)
-    console.log("matched humidity to location");
     return humToLoc
 }
-const createSeeds = (seedToSoil) => {
-    const seeds = {};
-    seedToSoil.forEach(([soil, seed, range]) => {
-       let soilcount = soil
-        for (let index = seed; index < seed + range ; index++) {
-            seeds[index] = soilcount
-            soilcount++
-        }
-    });
-    console.log("created data for seeds");
-    return seeds
-}
-const createSoil = (soilToFertilizer) => {
-    let soil = {};
-    soilToFertilizer.forEach(([fertNumber, soilNumber, range]) => {
-        let fertCount = fertNumber
-        for (let index = soilNumber; index < soilNumber + range; index++) {
-            soil[index] = fertCount
-            fertCount++
-        }
+
+const matchSoil = (seedsNumbers, seedToSoil) => {
+    const soil = []
+    seedsNumbers.forEach((number) => {
+        let replacement = number;
+        seedToSoil.forEach(([destination, source, range]) => {
+            if (number >= source && number < source + range) {
+                const change = destination - source
+                replacement = number + change
+            }
+        })
+        soil.push(replacement)
     })
-    console.log("created data for soil");
+    console.log("matched soil for seeds", soil);
     return soil
 }
-const createFert = (fertilizerToWater) => {
-    let fert = {};
-    fertilizerToWater.forEach(([waterNumber, fertNumber, range]) => {
-        let waterCount = waterNumber
-        for (let index = fertNumber; index < fertNumber + range; index++) {
-            fert[index] = waterCount
-            waterCount++
-        }
+const matchFert = (soil, soilToFertilizer) => {
+    const fert = []
+    soil.forEach((number) => {
+        let replacement = number;
+        soilToFertilizer.forEach(([destination, source, range]) => {
+            if (number >= source && number < source + range) {
+                const change = destination - source
+                replacement = number + change
+            }
+        })
+        fert.push(replacement)
     })
-    console.log("created data for fertilizer");
+    console.log("matched fertilizer to soil", fert);
     return fert
 }
-const createWater = (waterToLight) => {
-    let water = {};
-    waterToLight.forEach(([lightNumber, waterNumber, range]) => {
-        let lightCount = lightNumber
-        for (let index = waterNumber; index < waterNumber + range; index++) {
-            water[index] = lightCount
-            lightCount++
-        }
+const matchWater = (fertilizer, fertilizerToWater) => {
+    const water = []
+    fertilizer.forEach((number) => {
+        let replacement = number;
+        fertilizerToWater.forEach(([destination, source, range]) => {
+            if (number >= source && number < source + range) {
+                const change = destination - source
+                replacement = number + change
+            }
+        })
+        water.push(replacement)
     })
-    console.log("created data for water");
+    console.log("matched water to fertilizer", water);
     return water
 }
-const createLight = (lightToTemp) => { 
-    let light = {};
-    lightToTemp.forEach(([tempNumber, lightNumber, range]) => {
-        let tempCount = tempNumber
-        for (let index = lightNumber; index < lightNumber + range; index++) {
-            light[index] = tempCount
-            tempCount++
-        }
+const matchLight = (water, waterToLight) => { 
+    const light = []
+    water.forEach((number) => {
+        let replacement = number;
+        waterToLight.forEach(([destination, source, range]) => {
+            if (number >= source && number < source + range) {
+                const change = destination - source
+                replacement = number + change
+            }
+        })
+        light.push(replacement)
     })
-    console.log("created data for light");
+    console.log("matched light to water", light);
     return light 
 }
-const createTemp = (tempToHum) => {
-    let temp = {};
-    tempToHum.forEach(([humNumber, tempNumber, range]) => {
-        let humCount = humNumber
-        for (let index = tempNumber; index < tempNumber + range; index++) {
-            temp[index] = humCount
-            humCount++
-        }
+const matchTemp = (light, lightToTemp) => {
+    const temp = []
+    light.forEach((number) => {
+        let replacement = number;
+        lightToTemp.forEach(([destination, source, range]) => {
+            if (number >= source && number < source + range) {
+                const change = destination - source
+                replacement = number + change
+            }
+        })
+        temp.push(replacement)
     })
-    console.log("created data for temperature");
+    console.log("matched temperature to light", temp);
     return temp
 }
-const createHum = (humToLoc) => {
-    let hum = {};
-    humToLoc.forEach(([locNumber, humNumber, range]) => {
-        let locCount = locNumber
-        for (let index = humNumber; index < humNumber + range; index++) {
-            hum[index] = locCount
-            locCount++
-        }
+const matchHum = (temp, tempToHum) => {
+    const hum = []
+    temp.forEach((number) => {
+        let replacement = number;
+        tempToHum.forEach(([destination, source, range]) => {
+            if (number >= source && number < source + range) {
+                const change = destination - source
+                replacement = number + change
+            }
+        })
+        hum.push(replacement)
     })
-    console.log("created data for humidity and location");
+    console.log("matched humidity to temperature", hum);
     return hum
+}
+const showClosestLoc = (hum, humToLoc) => {
+    const loc = []
+    hum.forEach((number) => {
+        let replacement = number;
+        humToLoc.forEach(([destination, source, range]) => {
+            if (number >= source && number < source + range) {
+                const change = destination - source
+                replacement = number + change
+            }
+        })
+        loc.push(replacement)
+    })
+    console.log("matched location to humidity", loc);
+    return loc.sort((a,b)=>a-b)[0]
 }
 const findSeedsNumbers = (dataInput) => {
     const seedsNumbers = JSON.stringify(dataInput)
         .match(/(?<=seeds: ).*(?=\\n\\nseed)/)[0]
         .split(" ")
         .map(number => +number)
-    console.log("obtained seeds of interest...");
+    // console.log("obtained seeds of interest...");
     return seedsNumbers
-}
-const findlowestLocation = (seedsNumbers, data) => {
-    let numbers = seedsNumbers
-    let seedsLocation = []
-    for (let index = 0; index < data.length; index++) {
-        numbers = numbers.map((number, seedIndex) => {
-            seedsLocation[seedIndex] = data[index][number] ? [seedsNumbers[seedIndex], data[index][number]] : [seedsNumbers[seedIndex], number]
-            return data[index][number] ? data[index][number] : number
-        })
-        let progress = (((index+1)/data.length)*100).toFixed(0)
-        console.log(`looking for location progress: ${progress}%`);
-    }
-    return seedsLocation.sort(([a,b],[c,d]) => b-d)[0][1]
 }
 
 const dataInput = fs.readFileSync("./5-fertiliser/dataInput.txt", "utf8")
 
-const seedToSoil = findSeedToSoil(dataInput)
-const soilToFertilizer= findSoilToFertilizer(dataInput)
-const fertilizerToWater = findFertilizerToWater(dataInput)
-const waterToLight = findWaterToLight(dataInput)
-const lightToTemp = findLightToTemp(dataInput)
-const tempToHum = findTempToHum(dataInput)
-const humToLoc = findHumToLoc(dataInput)
-
-const seeds = createSeeds(seedToSoil)
-const soil = createSoil(soilToFertilizer)
-const fert = createFert(fertilizerToWater)
-const water = createWater(waterToLight)
-const light = createLight(lightToTemp)
-const temp = createTemp(tempToHum)
-const hum = createHum(humToLoc)
-
 const seedsNumbers = findSeedsNumbers(dataInput)
-const data = [ seeds, soil, fert, water, light, temp, hum ]
-const lowestLocation = findlowestLocation(seedsNumbers, data)
-console.log(seeds);
-console.log(lowestLocation);
-module.exports = { findBiggestNumber, findSeedToSoil, findSoilToFertilizer, findFertilizerToWater, findWaterToLight, findLightToTemp,  findTempToHum, findHumToLoc, createSeeds, createSoil, createFert, createWater, createLight, createTemp, createHum, findSeedsNumbers, findlowestLocation }
+
+const seedToSoil = findSeedToSoil(dataInput)
+const soil = matchSoil(seedsNumbers, seedToSoil)
+
+const soilToFertilizer= findSoilToFertilizer(dataInput)
+const fert = matchFert(soil, soilToFertilizer)
+
+const fertilizerToWater = findFertilizerToWater(dataInput)
+const water = matchWater(fert, fertilizerToWater)
+
+const waterToLight = findWaterToLight(dataInput)
+const light = matchLight(water, waterToLight)
+
+const lightToTemp = findLightToTemp(dataInput)
+const temp = matchTemp(light, lightToTemp)
+
+const tempToHum = findTempToHum(dataInput)
+const hum = matchHum(temp, tempToHum)
+
+const humToLoc = findHumToLoc(dataInput)
+const closestLocation = showClosestLoc(hum, humToLoc)
+console.log(closestLocation);
+module.exports = { findBiggestNumber, findSeedToSoil, findSoilToFertilizer, findFertilizerToWater, findWaterToLight, findLightToTemp,  findTempToHum, findHumToLoc,matchSoil, matchFert, matchWater, matchLight, matchTemp, matchHum, showClosestLoc, findSeedsNumbers }

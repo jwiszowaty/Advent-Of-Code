@@ -6,7 +6,8 @@ const { toArray3, findEngineParts, sumEngineParts } = require("./3-gear-ratios/p
 const { findStarsGears, findTheNumbersAdjacentToStarsGears, sumParts } = require("./3-gear-ratios/part-2/gear-ratios-2.js")
 const { extractWinNums, extractRanNums, countMatched, calculatePoints, sumPoints } = require("./4-scratchcards/scratchcards-1.js")
 const { countMatchedPartTwo, addCards, countCards } = require("./4-scratchcards/scratchcards-2.js")
-const {findSeedToSoil, findSoilToFertilizer, findFertilizerToWater, findWaterToLight, matchSoil, findLightToTemp, findTempToHum, findHumToLoc, matchFert, matchWater, matchLight, matchTemp, matchHum, showClosestLoc, findSeedsNumbers} = require("./5-fertiliser/fertiliser-1.js")
+const { findSeedToSoil, findSoilToFertilizer, findFertilizerToWater, findWaterToLight, matchSoil, findLightToTemp, findTempToHum, findHumToLoc, matchFert, matchWater, matchLight, matchTemp, matchHum, showClosestLoc, findSeedsNumbers } = require("./5-fertiliser/fertiliser-1.js")
+const { extractNumbersFromRange } = require("./5-fertiliser/fertiliser-2.js")
 describe("1-trebuchet", () => {
     test("the data is an array of rows", () => {
         const data = "1abc2\npqr3stu8vwx\na1b2c3d4e5f\ntreb7uchet"
@@ -249,7 +250,6 @@ describe("4-Scratchcards Part 2", () => {
 })
 describe.only("5-Seed Fertiliser Part 1", () => {
     const dataInput = fs.readFileSync("./5-fertiliser/test.txt", "utf8")
-    
     test("extract information each line as a separate element of the array, ordered in ascending order based on the seed number", () => {
         const seedToSoil = findSeedToSoil(dataInput)
         expect(seedToSoil).toEqual([[52, 50, 48], [50, 98, 2]])
@@ -274,34 +274,57 @@ describe.only("5-Seed Fertiliser Part 1", () => {
     })
     test("create objects which will hold information extracted from the data input", () => {
         const seedsNumbers = findSeedsNumbers(dataInput)
-        expect(seedsNumbers).toEqual([14, 79, 55, 13])
+        expect(seedsNumbers).toEqual([79, 14, 55, 13])
 
         const seedToSoil = findSeedToSoil(dataInput)
         const soil = matchSoil(seedsNumbers, seedToSoil)
-        expect(soil).toEqual([14, 81, 57, 13])
+        expect(soil).toEqual([81, 14, 57, 13])
 
         const soilToFertilizer= findSoilToFertilizer(dataInput)
         const fert = matchFert(soil, soilToFertilizer)
-        expect(fert).toEqual([53, 81, 57, 52])
+        expect(fert).toEqual([81, 53, 57, 52])
 
         const fertilizerToWater = findFertilizerToWater(dataInput)
         const water = matchWater(fert, fertilizerToWater)
-        expect(water).toEqual([49, 81, 53, 41])
+        expect(water).toEqual([81, 49, 53, 41])
 
         const waterToLight = findWaterToLight(dataInput)
         const light = matchLight(water, waterToLight)
-        expect(light).toEqual([42, 74, 46, 34])
+        expect(light).toEqual([74, 42, 46, 34])
         
         const lightToTemp = findLightToTemp(dataInput)
         const temp = matchTemp(light, lightToTemp)
-        expect(temp).toEqual([42, 78, 82, 34])
+        expect(temp).toEqual([78, 42, 82, 34])
 
         const tempToHum = findTempToHum(dataInput)
         const hum = matchHum(temp, tempToHum)
-        expect(hum).toEqual([43, 78, 82, 35])
+        expect(hum).toEqual([78, 43, 82, 35])
 
         const humToLoc = findHumToLoc(dataInput)
         const closestLocation = showClosestLoc(hum, humToLoc)
         expect(closestLocation).toBe(35)
+    })
+})
+describe.only("5-Seed Fertiliser Part 2", () => {
+    const dataInput = fs.readFileSync("./5-fertiliser/test.txt", "utf8")
+    test("create objects which will hold information extracted from the data input", () => {
+        const seedsNumbers = extractNumbersFromRange(dataInput)
+        expect(seedsNumbers).toBe(46)
+        
+        // const seedToSoil = findSeedToSoil(dataInput)
+        // const soil = matchSoil(seedsNumbers, seedToSoil)
+        // const soilToFertilizer= findSoilToFertilizer(dataInput)
+        // const fert = matchFert(soil, soilToFertilizer)
+        // const fertilizerToWater = findFertilizerToWater(dataInput)
+        // const water = matchWater(fert, fertilizerToWater)
+        // const waterToLight = findWaterToLight(dataInput)
+        // const light = matchLight(water, waterToLight)
+        // const lightToTemp = findLightToTemp(dataInput)
+        // const temp = matchTemp(light, lightToTemp)
+        // const tempToHum = findTempToHum(dataInput)
+        // const hum = matchHum(temp, tempToHum)
+        // const humToLoc = findHumToLoc(dataInput)
+        // const closestLocation = showClosestLoc(hum, humToLoc)
+        // expect(closestLocation).toBe(46)
     })
 })

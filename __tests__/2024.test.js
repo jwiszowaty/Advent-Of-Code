@@ -42,51 +42,40 @@ describe("1: Historian Hysteria", () => {
     })
 })
 describe.only("2: Red-Nosed Reports", () => {
-    const {findTrend, checkSafety, countSafeReports} = require("../2024/two.js")
-    it("should assign whether levels increase or decrease.", () => {
-        const levels = [[1, 2, 3, 4, 5]];
-        const levels2 = [[1, 2, 3, 4, 5], [5, 4, 3, 2, 1]];
-        const expectedTrends = ["increase"];
-        const expectedTrends2 = ["increase", "decrease"];
-
-        const trends = findTrend(levels).map(({ status: value, trend: value2 }) => value2)
-        const trends2 = findTrend(levels2).map(({ status: value, trend: value2 }) => value2)
-        
-        expect(trends).toEqual(expectedTrends);
-        expect(trends2).toEqual(expectedTrends2);
-    })
+    const { checkSafety, countSafeReports} = require("../2024/two.js")
+    
     it("should return the correct safety status of each report.", () => {
         const levels = [[1, 2, 3, 4, 5]];
         const levels2 = [[1, 2, 3, 4, 5], [5, 4, 3, 2, 1]];
         const levels3 = [[1, 2, 9, 10, 11], [11, 10, 9, 2, 1]];
-        const expectedSafety = ["safe"];
-        const expectedSafety2 = ["safe", "safe"];
-        const expectedSafety3 = ["unsafe", "unsafe"]
+        const expectedSafety = 1;
+        const expectedSafety2 = 2;
+        const expectedSafety3 = 0;
 
-        const safety = checkSafety(levels).map(({ status: value, trend: value2 }) => value)
-        const safety2 = checkSafety(levels2).map(({ status: value, trend: value2 }) => value)
-        const safety3 = checkSafety(levels3).map(({ status: value, trend: value2 }) => value)
+        const safety = checkSafety(levels).filter((report) => Object.hasOwn(report,"safe"))
+        const safety2 = checkSafety(levels2).filter((report) => Object.hasOwn(report,"safe"))
+        const safety3 = checkSafety(levels3).filter((report) => Object.hasOwn(report,"safe"))
 
-        expect(safety).toEqual(expectedSafety);
-        expect(safety2).toEqual(expectedSafety2);
-        expect(safety3).toEqual(expectedSafety3)
+        expect(safety.length).toEqual(expectedSafety);
+        expect(safety2.length).toEqual(expectedSafety2);
+        expect(safety3.length).toEqual(expectedSafety3)
     })
     it("should return the correct number for safe reports.", () => {
         const levels = [[1, 2, 3, 4, 5]];
-        const levels2 = [[1, 2, 3, 4, 5], [5, 4, 3, 2, 1]];
+        const levels2 = [[94, 92, 91, 90, 89, 88, 85, 84], [5, 4, 3, 2, 1]];
         const levels3 = [[1, 2, 9, 10, 11], [11, 10, 9, 2, 1]];
 
-        expect(countSafeReports(levels)[0]).toEqual(1);
-        expect(countSafeReports(levels2)[0]).toEqual(2);
-        expect(countSafeReports(levels3)[0]).toEqual(0);
+        expect(countSafeReports(levels)).toEqual(1);
+        expect(countSafeReports(levels2)).toEqual(2);
+        expect(countSafeReports(levels3)).toEqual(0);
     })
     it("should provide answer", () => {
         fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/two.txt", "utf-8")
             .then(data => {
                 return data.split("\n").map((numbersString) => numbersString.split(" ").map((number) => +number));
             })
-            .then(levels => {
-                console.log(countSafeReports(levels));
+            .then(data => {
+                console.log(countSafeReports(data));
                 
             })
     })

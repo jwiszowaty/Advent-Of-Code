@@ -1,58 +1,41 @@
-const findTrend = (levels, reports=[]) => {
-    levels.forEach((report, index) => {
-        if (report[0] < report[1]) {
-            reports.push({ trend: "increase", status:"safe"});
-        };
-        if (report[0] > report[1]) {
-            reports.push({ trend: "decrease", status: "safe"})
-        }
-    })
-    return reports;
-}
-
-const checkSafety = (levels) => {
-    let reports = findTrend(levels)
-    levels.forEach((report, index) => {
-        if (report[0] < report[1]) {
-            for (let index2 = 0; index2 < report.length - 1; index2++) {
-                const difference = report[index2] - report[index2 + 1];
-                if (difference <= -1 && difference >= -4) {
-                    continue;
-                } else {
-                    reports[index].status = "unsafe";
+const checkSafety = (data) => {
+    const reports = []
+    for (let index = 0; index < data.length; index++) {
+        let status = "safe";
+        let levels = data[index]
+        if (levels[0] < levels[1]) {
+            for (let index2 = 0; index2 < levels.length - 1; index2++) {
+                const difference = levels[index2] - levels[index2 + 1];
+                if (difference > -1 || difference < -3) {
+                    status = "unsafe"
                     break;
                 }
             };
-        };
-        if (report[0] > report[1]) {
-            for (let index2 = 0; index2 < report.length - 1; index2++) {
-                const difference = report[index2] - report[index2 + 1]
-                if (difference >= 1 && difference <= 4) {
-                    continue;
-                } else {
-                    reports[index].status = "unsafe";
+        } else if (levels[0] > levels[1]) {
+            for (let index2 = 0; index2 < levels.length - 1; index2++) {
+                const difference = levels[index2] - levels[index2 + 1]
+                if (difference < 1 || difference > 3) {
+                    status = "unsafe"
                     break;
                 }
-            }
+            };
+        } else {
+            status = "unsafe"
         }
-    });
+        reports.push(status)
+    };
+    console.log(reports.length);
     return reports;
 }
 
-const countSafeReports = (levels) => {
-    let reports = checkSafety(levels)
-    let countSafe = 0;
-    let countUnsafe = 0;
-    reports.forEach(({ status: value, trend: value2 }, index) => {
-        if (value == "safe") {
-            countSafe++
-        } else if (value == "unsafe") {
-            countUnsafe++
-        } else {
-            console.log(reports[index]);
-        }
-    })
-    return [countSafe, countUnsafe];
+const countSafeReports = (data) => {
+    const dataLength = data.length;
+    const reports = checkSafety(data)
+    let countSafe = reports.filter(report => report == "safe").length;
+    let countUnsafe = reports.filter(report => report == "safe").length;
+    console.log(dataLength-countUnsafe);
+
+    return countSafe;
 }
 
-module.exports = {findTrend, checkSafety, countSafeReports}
+module.exports = {checkSafety, countSafeReports}

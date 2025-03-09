@@ -44,6 +44,15 @@ describe("1: Historian Hysteria", () => {
 describe.only("2: Red-Nosed Reports", () => {
     const { checkSafety, countSafeReports} = require("../2024/two.js")
     
+    
+    it("should return 1 for one set of levels which are increasing by 1.", () => {
+        const levels = [[1, 2, 3, 4, 5]];
+        const expectedSafeSets = 1;
+
+        const safety = checkSafety(levels).filter((report) => report == "safe")
+
+        expect(safety.).toEqual(expectedSafety);
+    })
     it("should return the correct safety status of each report.", () => {
         const levels = [[1, 2, 3, 4, 5]];
         const levels2 = [[1, 2, 3, 4, 5], [5, 4, 3, 2, 1]];
@@ -52,9 +61,9 @@ describe.only("2: Red-Nosed Reports", () => {
         const expectedSafety2 = 2;
         const expectedSafety3 = 0;
 
-        const safety = checkSafety(levels).filter((report) => Object.hasOwn(report,"safe"))
-        const safety2 = checkSafety(levels2).filter((report) => Object.hasOwn(report,"safe"))
-        const safety3 = checkSafety(levels3).filter((report) => Object.hasOwn(report,"safe"))
+        const safety = checkSafety(levels).filter((report) => report == "safe")
+        const safety2 = checkSafety(levels2).filter((report) =>  report == "safe")
+        const safety3 = checkSafety(levels3).filter((report) =>  report == "safe")
 
         expect(safety.length).toEqual(expectedSafety);
         expect(safety2.length).toEqual(expectedSafety2);
@@ -69,14 +78,14 @@ describe.only("2: Red-Nosed Reports", () => {
         expect(countSafeReports(levels2)).toEqual(2);
         expect(countSafeReports(levels3)).toEqual(0);
     })
-    it("should provide answer", () => {
-        fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/two.txt", "utf-8")
-            .then(data => {
-                return data.split("\n").map((numbersString) => numbersString.split(" ").map((number) => +number));
-            })
-            .then(data => {
-                console.log(countSafeReports(data));
+    // it("should provide answer", () => {
+    //     fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/two.txt", "utf-8")
+    //         .then(data => {
+    //             return data.split("\n").map((numbersString) => numbersString.split(" ").map((number) => +number));
+    //         })
+    //         .then(data => {
+    //             console.log(countSafeReports(data));
                 
-            })
-    })
+    //         })
+    // })
 })

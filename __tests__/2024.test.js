@@ -44,48 +44,54 @@ describe("1: Historian Hysteria", () => {
 describe.only("2: Red-Nosed Reports", () => {
     const { checkSafety, countSafeReports} = require("../2024/two.js")
     
+    for (let i = 0; i < 3; i++) {
+        it(`should return 1 for one set of 5 levels incremented by ${i + 1}.`, () => {
+            const levels = [[1, 2 + i, 3 + (2 * i), 4 + (3 * i), 5 + (4 * i)]];
+            const expectedSafeReports = 1;
     
-    it("should return 1 for one set of levels which are increasing by 1.", () => {
-        const levels = [[1, 2, 3, 4, 5]];
-        const expectedSafeSets = 1;
-
-        const safety = checkSafety(levels).filter((report) => report == "safe")
-
-        expect(safety.).toEqual(expectedSafety);
-    })
-    it("should return the correct safety status of each report.", () => {
-        const levels = [[1, 2, 3, 4, 5]];
-        const levels2 = [[1, 2, 3, 4, 5], [5, 4, 3, 2, 1]];
-        const levels3 = [[1, 2, 9, 10, 11], [11, 10, 9, 2, 1]];
-        const expectedSafety = 1;
-        const expectedSafety2 = 2;
-        const expectedSafety3 = 0;
-
-        const safety = checkSafety(levels).filter((report) => report == "safe")
-        const safety2 = checkSafety(levels2).filter((report) =>  report == "safe")
-        const safety3 = checkSafety(levels3).filter((report) =>  report == "safe")
-
-        expect(safety.length).toEqual(expectedSafety);
-        expect(safety2.length).toEqual(expectedSafety2);
-        expect(safety3.length).toEqual(expectedSafety3)
-    })
-    it("should return the correct number for safe reports.", () => {
-        const levels = [[1, 2, 3, 4, 5]];
-        const levels2 = [[94, 92, 91, 90, 89, 88, 85, 84], [5, 4, 3, 2, 1]];
-        const levels3 = [[1, 2, 9, 10, 11], [11, 10, 9, 2, 1]];
-
-        expect(countSafeReports(levels)).toEqual(1);
-        expect(countSafeReports(levels2)).toEqual(2);
-        expect(countSafeReports(levels3)).toEqual(0);
-    })
-    // it("should provide answer", () => {
-    //     fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/two.txt", "utf-8")
-    //         .then(data => {
-    //             return data.split("\n").map((numbersString) => numbersString.split(" ").map((number) => +number));
-    //         })
-    //         .then(data => {
-    //             console.log(countSafeReports(data));
+            const safeReports = countSafeReports(levels)
+    
+            expect(safeReports).toEqual(expectedSafeReports);
+        })
+    }
+    for (let i = 0; i > -3; i--) {
+        it(`should return 1 for one set of 5 levels decremented by ${i - 1}.`, () => {
+            const levels = [[20, 19 + i, 18 + (2 * i), 17 + (3 * i), 16 + (4 * i)]];
+            const expectedSafeReports = 1;
+    
+            const safeReports = countSafeReports(levels)
+    
+            expect(safeReports).toEqual(expectedSafeReports);
+        })
+    }
+    for (let i = 0; i < 3; i++) {
+        it(`should return 0 for one set of 5 levels neither incremented nor decremented.`, () => {
+            const levels = [[1 + i, 1 + i, 1 + i, 1 + i, 1 + i]];
+            const expectedSafeReports = 0;
+    
+            const safeReports = countSafeReports(levels)
+    
+            expect(safeReports).toEqual(expectedSafeReports);
+        })
+    }
+    for (let i = 0; i < 3; i++) {
+        it(`should return 0 for one set of 5 levels when one level is not incremented.`, () => {
+            const levels = [[1, 2 + i, 2 + i, 4 + (3 * i), 5 + (4 * i)]];
+            const expectedSafeReports = 0;
+    
+            const safeReports = countSafeReports(levels)
+    
+            expect(safeReports).toEqual(expectedSafeReports);
+        })
+    }
+    it("should provide answer", () => {
+        fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/two.txt", "utf-8")
+            .then(data => {
+                return data.split("\n").map((numbersString) => numbersString.split(" ").map((number) => +number));
+            })
+            .then(data => {
+                console.log(countSafeReports(data));
                 
-    //         })
-    // })
+            })
+    })
 })

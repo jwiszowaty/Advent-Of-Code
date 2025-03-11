@@ -1,51 +1,42 @@
-const checkSafety = (data) => {
-    const reports = []
-    for (let index = 0; index < data.length; index++) {
-        let status = "safe";
-        let levels = data[index]
-        
-        let trend = levels[0] < levels[1] ? "increasing" : "decreasing"
-        for (let index2 = 0; index2 < levels.length - 1; index2++) {
-            const difference = levels[index2] - levels[index2 + 1];
-            const followsTrend = trend === "increasing" ? (difference <= -1 && difference >= -3) : (difference >= 1 && difference <= 3);
-            if (!followsTrend) {
-                console.log(levels);
-                
+const checkLevels = (levels) => {
+    let status = "safe";
+    const identifiedTrend = levels[0] < levels[1] ? "increasing" : (
+        levels[0] > levels[1] ? "decreasing" : "unsafe");
+    if (identifiedTrend === "increasing") {
+        for (let i = 0; i < levels.length - 1; i++) {
+            const increment = levels[i] - levels[i + 1];
+            if (increment <= -1 && increment >= -3) {
+                continue;
+            } else {
                 status = "unsafe";
                 break;
             }
-        };
-
-        // if (levels[0] < levels[1]) {
-        //     for (let index2 = 0; index2 < levels.length - 1; index2++) {
-        //         const difference = levels[index2] - levels[index2 + 1];
-        //         const followsTrend = difference <= -1 || difference >= -3;
-        //         if (!followsTrend) {
-        //             status = "unsafe";
-        //             break;
-        //         }
-        //     };
-        // } else if (levels[0] > levels[1]) {
-        //     for (let index2 = 0; index2 < levels.length - 1; index2++) {
-        //         const difference = levels[index2] - levels[index2 + 1]
-        //         if (difference < 1 || difference > 3) {
-        //             status = "unsafe"
-        //             break;
-        //         }
-        //     };
-        // } else {
-        //     status = "unsafe"
-        // }
-        reports.push(status)
-    };
-    return reports;
+        }
+    } else if (identifiedTrend === "decreasing") {
+        for (let i = 0; i < levels.length - 1; i++) {
+            const increment = levels[i] - levels[i + 1];
+            if (increment <= 3 && increment >= 1) {
+                continue;
+            } else {
+                status = "unsafe";
+                break;
+            }
+        }
+    } else {
+        status = identifiedTrend;
+    }
+    return status;
 }
 
 const countSafeReports = (data) => {
-    const reports = checkSafety(data)
-    let countSafe = reports.filter(report => report == "safe").length;
-
-    return countSafe;
+    let count = 0;
+    data.forEach(levels => {
+        const safetyStatus = checkLevels(levels);
+        if (safetyStatus === "safe") {
+            count++;
+        }
+    });
+    return count;
 }
 
-module.exports = {checkSafety, countSafeReports}
+module.exports = {countSafeReports}

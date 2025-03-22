@@ -41,11 +41,11 @@ describe("1: Historian Hysteria", () => {
             })
     })
 })
-describe.only("2: Red-Nosed Reports", () => {
+describe("2 Part 1: Red-Nosed Reports", () => {
     const { checkSafety, countSafeReports} = require("../2024/two.js")
     
     for (let i = 0; i < 3; i++) {
-        it(`should return 1 for one set of 5 levels incremented by ${i + 1}.`, () => {
+        it(`should return 1 for a set of 5 levels incremented by ${i + 1}.`, () => {
             const levels = [[1, 2 + i, 3 + (2 * i), 4 + (3 * i), 5 + (4 * i)]];
             const expectedSafeReports = 1;
     
@@ -55,7 +55,7 @@ describe.only("2: Red-Nosed Reports", () => {
         })
     }
     for (let i = 0; i > -3; i--) {
-        it(`should return 1 for one set of 5 levels decremented by ${i - 1}.`, () => {
+        it(`should return 1 for a set of 5 levels decremented by ${i - 1}.`, () => {
             const levels = [[20, 19 + i, 18 + (2 * i), 17 + (3 * i), 16 + (4 * i)]];
             const expectedSafeReports = 1;
     
@@ -65,7 +65,7 @@ describe.only("2: Red-Nosed Reports", () => {
         })
     }
     for (let i = 0; i < 3; i++) {
-        it(`should return 0 for one set of 5 levels neither incremented nor decremented.`, () => {
+        it(`should return 0 for a set of 5 levels neither incremented nor decremented.`, () => {
             const levels = [[1 + i, 1 + i, 1 + i, 1 + i, 1 + i]];
             const expectedSafeReports = 0;
     
@@ -75,7 +75,7 @@ describe.only("2: Red-Nosed Reports", () => {
         })
     }
     for (let i = 0; i < 3; i++) {
-        it(`should return 0 for one set of 5 levels when one level is not incremented.`, () => {
+        it(`should return 0 for a set of 5 levels when one level is not incremented.`, () => {
             const levels = [[1, 2 + i, 2 + i, 4 + (3 * i), 5 + (4 * i)]];
             const expectedSafeReports = 0;
     
@@ -84,6 +84,51 @@ describe.only("2: Red-Nosed Reports", () => {
             expect(safeReports).toEqual(expectedSafeReports);
         })
     }
+    it("should provide answer", () => {
+        fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/two.txt", "utf-8")
+            .then(data => {
+                return data.split("\n").map((numbersString) => numbersString.split(" ").map((number) => +number));
+            })
+            .then(data => {
+                console.log(countSafeReports(data));
+                
+            })
+    })
+})
+describe.only("2 Part 2: Red-Nosed Reports", () => {
+    const {countSafeReports} = require("../2024/twoPart2.js")
+    it(`should return 1 for a set of 5 levels incremented by 1 with ou level decreasing.`, () => {
+        const levels = [[1, 2, 1, 4, 5]];
+        const expectedSafeReports = 1;
+
+        const safeReports = countSafeReports(levels)
+
+        expect(safeReports).toEqual(expectedSafeReports);
+    })
+    it(`should return 1 for a set of 5 levels decremented by 1 with ou level increasing.`, () => {
+        const levels = [[7, 8, 5, 4, 3]];
+        const expectedSafeReports = 1;
+
+        const safeReports = countSafeReports(levels)
+
+        expect(safeReports).toEqual(expectedSafeReports);
+    })
+    it(`should return 0 for a set of 5 levels decremented by 1 with one level increasing and repaired level has too big difference.`, () => {
+        const levels = [[9, 8, 9, 4, 3]];
+        const expectedSafeReports = 0;
+
+        const safeReports = countSafeReports(levels)
+
+        expect(safeReports).toEqual(expectedSafeReports);
+    })
+    it(`should return 0 for a set of 5 levels decremented by 1 with 2 levels not following trend.`, () => {
+        const levels = [[9, 8, 10, 9, 7]];
+        const expectedSafeReports = 0;
+
+        const safeReports = countSafeReports(levels)
+
+        expect(safeReports).toEqual(expectedSafeReports);
+    })
     it("should provide answer", () => {
         fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/two.txt", "utf-8")
             .then(data => {

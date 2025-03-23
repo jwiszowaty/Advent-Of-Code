@@ -1,6 +1,6 @@
 const fs = require("fs/promises")
 describe("1: Historian Hysteria", () => {
-    const { sortNumbers, findDistance, sumDistances, calculateTotalDistance} = require("../2024/one.js")
+    const { sortNumbers, findDistance, sumDistances, calculateTotalDistance} = require("../2024/1.js")
     it("should sort numbers low to high", () => {
         const unsortedNumbers = [4, 2, 3, 1, 0]
         const sortedNumbers = [0, 1, 2, 3, 4]
@@ -42,7 +42,7 @@ describe("1: Historian Hysteria", () => {
     })
 })
 describe("2 Part 1: Red-Nosed Reports", () => {
-    const { checkSafety, countSafeReports} = require("../2024/two.js")
+    const { checkSafety, countSafeReports} = require("../2024/2.1.js")
     
     for (let i = 0; i < 3; i++) {
         it(`should return 1 for a set of 5 levels incremented by ${i + 1}.`, () => {
@@ -95,8 +95,8 @@ describe("2 Part 1: Red-Nosed Reports", () => {
             })
     })
 })
-describe.only("2 Part 2: Red-Nosed Reports", () => {
-    const {countSafeReports} = require("../2024/twoPart2.js")
+describe("2 Part 2: Red-Nosed Reports", () => {
+    const {countSafeReports} = require("../2024/2.2.js")
     it(`should return 1 for a set of 5 levels incremented by 1 with ou level decreasing.`, () => {
         const levels = [[1, 2, 1, 4, 5]];
         const expectedSafeReports = 1;
@@ -137,6 +137,67 @@ describe.only("2 Part 2: Red-Nosed Reports", () => {
             .then(data => {
                 console.log(countSafeReports(data));
                 
+            })
+    })
+})
+describe("3.1: Mull It Over", () => {
+    const {sumMul} = require("../2024/3.1.js")
+    it("should return the result of a single instruction", () => {
+        const instruction = "mul(2,3)";
+        const expected = 6;
+        const actual = sumMul(instruction)
+        expect(actual).toEqual(expected)
+    })
+    it("should return the result of a single instruction being surrounded by extra characters", () => {
+        const instruction = "xmul(2,3)44";
+        const expected = 6;
+        const actual = sumMul(instruction)
+        expect(actual).toEqual(expected)
+    })
+    it("should return the result of a multiple instructions in a row", () => {
+        const instruction = "mul(2,3)mul(2,3)mul(2,3)";
+        const expected = 18;
+        const actual = sumMul(instruction)
+        expect(actual).toEqual(expected)
+    })
+    it("should return the result of a multiple instructions which are separated by other characters", () => {
+        const instruction = "mul(2,3)fffffmul(2,3)vcvc5s7hddmul(2,3)dhdhd7333%%%";
+        const expected = 18;
+        const actual = sumMul(instruction)
+        expect(actual).toEqual(expected)
+    })
+    it("should only read correctly formatted instructions", () => {
+        const instruction = "mul(2!,3)fffffmful(2,3)vcvc5s7hddmul(2,3)dhdhd7333%%%";
+        const expected = 6;
+        const actual = sumMul(instruction)
+        expect(actual).toEqual(expected)
+    })
+    it("should not read instructions with numbers larger than 3 digits", () => {
+        const instruction = "mul(2116,3)fffffmul(2,3444)vcvc5s7hddmul(2,3)dhdhd7333%%%";
+        const expected = 6;
+        const actual = sumMul(instruction)
+        expect(actual).toEqual(expected)
+    })
+    it("should provide answer", () => {
+        fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/3.txt", "utf-8")
+            .then(data => {
+                console.log(sumMul(data));
+            })
+    })
+})
+describe.only("3.2: Mull It Over Part 2", () => {
+    const { sumMul } = require("../2024/3.1.js")
+    const { filterRelevant } = require("../2024/3.2.js")
+    it("should return the result of a single instruction", () => {
+        const instruction = "ggggggggmul(2,3)don't()mul(2,3)ffffdo()mul(2,3)don't()mul(2,3)mul(2,3)do()mul(2,3)don't()do()mul(2,3)";
+        const expected = 24;
+        const actual = sumMul(filterRelevant(instruction))
+        expect(actual).toEqual(expected)
+    })
+    it("should provide answer", () => {
+        fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/3.txt", "utf-8")
+            .then(data => {
+                console.log(sumMul(filterRelevant(data)));
             })
     })
 })

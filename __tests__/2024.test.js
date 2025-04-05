@@ -186,18 +186,17 @@ describe("3.1: Mull It Over", () => {
     })
 })
 describe.only("3.2: Mull It Over Part 2", () => {
-    const { sumMul } = require("../2024/3.1.js")
-    const { filterRelevant } = require("../2024/3.2.js")
+    const {evaluateInstructions} = require("../2024/3.2.js")
     it("should return the result of a single instruction", () => {
         const instruction = "ggggggggmul(2,3)don't()mul(2,3)ffffdo()mul(2,3)don't()mul(2,3)mul(2,3)do()mul(2,3)don't()do()mul(2,3)";
         const expected = 24;
-        const actual = sumMul(filterRelevant(instruction))
+        const actual = evaluateInstructions(instruction)
         expect(actual).toEqual(expected)
     })
     it("should provide answer", () => {
         fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/3.txt", "utf-8")
             .then(data => {
-                console.log(sumMul(filterRelevant(data)));
+                console.log(evaluateInstructions(data));
             })
     })
 })

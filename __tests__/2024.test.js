@@ -185,7 +185,7 @@ describe("3.1: Mull It Over", () => {
             })
     })
 })
-describe.only("3.2: Mull It Over Part 2", () => {
+describe("3.2: Mull It Over Part 2", () => {
     const {evaluateInstructions} = require("../2024/3.2.js")
     it("should return the result of a single instruction", () => {
         const instruction = "ggggggggmul(2,3)don't()mul(2,3)ffffdo()mul(2,3)don't()mul(2,3)mul(2,3)do()mul(2,3)don't()do()mul(2,3)";
@@ -197,6 +197,36 @@ describe.only("3.2: Mull It Over Part 2", () => {
         fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/3.txt", "utf-8")
             .then(data => {
                 console.log(evaluateInstructions(data));
+            })
+    })
+})
+describe.only("4.1: Ceres Search", () => {
+    const {findRowLength, checkAllPossibilities, countWords, findWords} = require("../2024/4.1.js")
+    it("should find length of a single row", () => {
+        const data = "MMMSXXMASM\nMSAMXMSMSA\nAMXSXMAAMM\nMSAMASMSMX";
+        const expected = 11;
+        const actual = findRowLength(data)
+        expect(actual).toEqual(expected)
+    })
+    it("should analyse the possible occurences of XMAS", () => {
+        const data = "SMMSSSSAMX\nASAMSMSMMM\nMMSSSMAAMA\nXMASASSSMS";
+        const expected = {
+            9: ["X", "X", "XMAS", "XMAS", "XMAS", "X", "X", "X" ],
+            33: ["XMAS","X", "X", "X", "X", "X", "XMAS", "XMAS"],
+        };
+        const actual = checkAllPossibilities(data)
+        expect(actual).toEqual(expected)
+    })
+    it("should count XMAS's", () => {
+        const data = "SMMSSSSAMX\nASAMSMSMMM\nMMSSSMAAMA\nXMASASSSMS";
+        const expected = 6;
+        const actual = countWords(checkAllPossibilities(data))
+        expect(actual).toEqual(expected)
+    })
+    it("should provide answer", () => {
+        fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/4.txt", "utf-8")
+            .then(data => {
+                console.log(findWords(data));
             })
     })
 })

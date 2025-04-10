@@ -4,6 +4,7 @@ const findRowLength = (data) => {
 
 const returnWord = (data, row, column, direction) => {
     const rowLength = data[0].length
+    
     let word = "X"
     const positions = {
         "right": [[row, column+1],[row, column+2],[row, column+3]],
@@ -28,30 +29,37 @@ const returnWord = (data, row, column, direction) => {
     return word;
 }
     
-const checkAllPossibilities = (data, listOfPossibilities = {}) => {
-    const dataSplit = data.split("\n").map(row => row.split(""))
-    const Xposition = data.indexOf("X")
-    const column = Xposition%11
-    const row = Math.floor(Xposition/11)
+const checkAllPossibilities = (data, Xposition, listOfPossibilities = []) => {
+    const column = Xposition%(data[0].length+1)
+    const row = Math.floor(Xposition / (data[0].length+1))
     
     const directions = ["right", "diag-135", "down", "diag-225", "left", "diag-315", "up", "diag-45"]
-    if (Xposition === -1) {
-        return listOfPossibilities;
-    }
 
-    listOfPossibilities[Xposition] = directions.map(direction => returnWord(dataSplit, row, column, direction))
+    directions.forEach(direction => listOfPossibilities.push(returnWord(data, row, column, direction)))
     
-    return checkAllPossibilities(data.replace("X", "."), listOfPossibilities)
+    return listOfPossibilities;
 }
-const countWords = (listOfPossibilities) => {
+const countWords = (data, Xposition) => {
+    const listOfPossibilities = checkAllPossibilities(data, Xposition);
+    
     let count = 0;
-    for (const key in listOfPossibilities) {
-        const filteredList = listOfPossibilities[key].filter((word) => word === "XMAS")
-        count = count + filteredList.length
-    }
+    const filteredList = listOfPossibilities.filter((word) => word === "XMAS")
+    count = count + filteredList.length
+    
     return count;
 }
-const findWords = (data) => {
-    return countWords(checkAllPossibilities(data))
+const findWords = (data, count = 0) => {
+    const dataArray = data.split("\n").map(row => row.split(""))
+    const Xposition = data.indexOf("X")
+    
+    if (Xposition === -1) {
+        return count;
+    }
+
+    const numberOfXMAS = countWords(dataArray, Xposition)
+    count = count + numberOfXMAS
+    
+
+    return findWords(data.replace("X","."), count);
 }
 module.exports = {findRowLength, checkAllPossibilities, countWords, findWords}

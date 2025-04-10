@@ -209,18 +209,15 @@ describe.only("4.1: Ceres Search", () => {
         expect(actual).toEqual(expected)
     })
     it("should analyse the possible occurences of XMAS", () => {
-        const data = "SMMSSSSAMX\nASAMSMSMMM\nMMSSSMAAMA\nXMASASSSMS";
-        const expected = {
-            9: ["X", "X", "XMAS", "XMAS", "XMAS", "X", "X", "X" ],
-            33: ["XMAS","X", "X", "X", "X", "X", "XMAS", "XMAS"],
-        };
-        const actual = checkAllPossibilities(data)
+        const data = [['S','M','M','S','S','S','S','A','M','X'],['A','S','A','M','S','M','S','M','M','M'],['M','M','S','S','S','M','A','A','M','A'],['X','M','A','S','A','S','S','S','M','S']];
+        const expected = ["X", "X", "XMAS", "XMAS", "XMAS", "X", "X", "X" ]
+        const actual = checkAllPossibilities(data, 9)
         expect(actual).toEqual(expected)
     })
     it("should count XMAS's", () => {
         const data = "SMMSSSSAMX\nASAMSMSMMM\nMMSSSMAAMA\nXMASASSSMS";
         const expected = 6;
-        const actual = countWords(checkAllPossibilities(data))
+        const actual = findWords(data)
         expect(actual).toEqual(expected)
     })
     it("should provide answer", () => {

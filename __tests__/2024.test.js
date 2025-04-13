@@ -200,7 +200,7 @@ describe("3.2: Mull It Over Part 2", () => {
             })
     })
 })
-describe.only("4.1: Ceres Search", () => {
+describe("4.1: Ceres Search", () => {
     const {findRowLength, checkAllPossibilities, countWords, findWords} = require("../2024/4.1.js")
     it("should find length of a single row", () => {
         const data = "MMMSXXMASM\nMSAMXMSMSA\nAMXSXMAAMM\nMSAMASMSMX";
@@ -224,6 +224,40 @@ describe.only("4.1: Ceres Search", () => {
         fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/4.txt", "utf-8")
             .then(data => {
                 console.log(findWords(data));
+            })
+    })
+})
+describe.only("4.2: Ceres Search", () => {
+    const {parseGrid, findA, findDiagonalWords, countMASCross, searchXMAS} = require("../2024/4.2.js")
+    it("should return data as an array of arrays of characters", () => {
+        const data = "MMMSXXMASM\nMSAMXMSMSA\nAMXSXMAAMM\nMSAMASMSMX";
+        const expected = [['M','M','M','S','X','X','M','A','S','M'],['M','S','A','M','X','M','S','M','S','A'],['A','M','X','S','X','M','A','A','M','M'],['M','S','A','M','A','S','M','S','M','X']];
+        const actual = parseGrid(data)
+        expect(actual).toEqual(expected)
+    })
+    it("should return coordination list of A's in the grid", () => {
+        const grid = [['M', 'M', 'M', 'S', 'X', 'X', 'M', 'A', 'S', 'M'], ['M', 'S', 'A', 'M', 'X', 'M', 'S', 'M', 'S', 'A'], ['A', 'M', 'X', 'S', 'X', 'M', 'A', 'A', 'M', 'M'], ['M', 'S', 'A', 'M', 'A', 'S', 'M', 'S', 'M', 'X']];
+        const expected = [[0, 7], [1, 2], [1, 9], [2, 0], [2, 6], [2, 7], [3, 2], [3, 4]]
+        const actual = findA(grid)
+        expect(actual).toEqual(expected)
+    })
+    it("should return three letter words with coordination of 'A' in the middle", () => {
+        const grid = [['M', 'M', 'M', 'S', 'X', 'X', 'M', 'A', 'S', 'M'], ['M', 'S', 'A', 'M', 'X', 'M', 'S', 'M', 'S', 'A'], ['A', 'M', 'X', 'S', 'X', 'M', 'A', 'A', 'M', 'M'], ['M', 'S', 'A', 'M', 'A', 'S', 'M', 'S', 'M', 'X']];
+        const coordinates = [[0, 7], [1, 2], [1, 9], [2, 0], [2, 6], [2, 7], [3, 2], [3, 4]];
+        const actual = findDiagonalWords(grid, coordinates)
+        const expected = [["SA", "AS"], ["MAS", "MAS"], ["MA", "SA"], ["AS", "AS"], ["SAM", "MAS"], ["MAS", "SAM"], ["AS", "MA"], ["AM", "SA"]]
+        expect(actual).toEqual(expected)
+    })
+    it("should return number of 'MAS' crosses", () => {
+        const diagonalWords = [["SA", "AS"], ["MAS", "MAS"], ["MA", "SA"], ["AS", "AS"], ["SAM", "MAS"], ["MAS", "SAM"], ["AS", "MA"], ["AM", "SA"]];
+        const expected = 3;
+        const actual = countMASCross(diagonalWords)
+        expect(actual).toEqual(expected)
+    })
+    it("should provide answer", () => {
+        fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/4.txt", "utf-8")
+            .then(data => {
+                console.log(searchXMAS(data));
             })
     })
 })

@@ -1,6 +1,6 @@
 const fs = require("fs/promises")
-describe("1: Historian Hysteria", () => {
-    const { sortNumbers, findDistance, sumDistances, calculateTotalDistance} = require("../2024/1.js")
+describe("1.1: Historian Hysteria", () => {
+    const { sortNumbers, findDistance, sumDistances, calculateTotalDistance} = require("../2024/1.1.js")
     it("should sort numbers low to high", () => {
         const unsortedNumbers = [4, 2, 3, 1, 0]
         const sortedNumbers = [0, 1, 2, 3, 4]
@@ -26,7 +26,7 @@ describe("1: Historian Hysteria", () => {
         expect(result).toEqual(expected)
     })
     it("finds the solution to the first task.", () => {
-        fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/one.txt","utf-8")
+        fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/1.txt","utf-8")
             .then((data) => {
                 const columns = [[],[]]
                 const numbersPairs = data.split('\n').map((numbers) => numbers.split('   '))
@@ -41,7 +41,48 @@ describe("1: Historian Hysteria", () => {
             })
     })
 })
-describe("2 Part 1: Red-Nosed Reports", () => {
+describe.only("1.2: Historian Hysteria", () => {
+    const { parseTable, filterUnique, createOccurenceReport, calculateSimilarityScore, findSimilarityScore} = require("../2024/1.2.js");
+    it("should return an array with numbers from left column and right column split into two arrays.", () => {
+        const data = "3   4\n4   3\n2   5\n1   3\n3   9\n3   3";
+        const expected = [[3, 4, 2, 1, 3, 3], [4, 3, 5, 3, 9, 3]];
+        const actual = parseTable(data);
+        expect(actual).toEqual(expected);
+    })
+    it("should return a set of unique numbers appearing in the first column", () => {
+        const data = [[3, 4, 2, 1, 3, 3], [4, 3, 5, 3, 9, 3]];
+        const expected = new Set([3, 4, 2, 1]);
+        const actual = filterUnique(data[0]);
+        expect(actual).toEqual(expected);
+    })
+    it("shoukd return occurence report in form of object where key is the number in question and value is the number of occurences in the right column", () => {
+        const data = [[3, 4, 2, 1, 3, 3], [4, 3, 5, 3, 9, 3]];
+        const numbers = new Set([3, 4, 2, 1]);
+        const expected = { 3: 3, 4: 1};
+        const actual = createOccurenceReport(data[1], numbers);
+        expect(actual).toEqual(expected);
+    })
+    it("should return sum of each number multiplied by its occurence number.", () => {
+        const data = [[3, 4, 2, 1, 3, 3], [4, 3, 5, 3, 9, 3]];
+        const report = { 3: 3, 4: 1 };
+        const expected = 31;
+        const actual = calculateSimilarityScore(data[0],report);
+        expect(actual).toEqual(expected);
+    })
+    it("should return similarity score starting witg raw data.", () => {
+        const data = "3   4\n4   3\n2   5\n1   3\n3   9\n3   3";
+        const expected = 31;
+        const actual = findSimilarityScore(data);
+        expect(actual).toEqual(expected);
+    })
+    it("finds the solution.", () => {
+        fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/1.txt","utf-8")
+            .then((data) => {
+                console.log(findSimilarityScore(data));
+            })
+    })
+})
+describe("2.1: Red-Nosed Reports", () => {
     const { checkSafety, countSafeReports} = require("../2024/2.1.js")
     
     for (let i = 0; i < 3; i++) {
@@ -95,7 +136,7 @@ describe("2 Part 1: Red-Nosed Reports", () => {
             })
     })
 })
-describe("2 Part 2: Red-Nosed Reports", () => {
+describe("2.2: Red-Nosed Reports", () => {
     const {countSafeReports} = require("../2024/2.2.js")
     it(`should return 1 for a set of 5 levels incremented by 1 with ou level decreasing.`, () => {
         const levels = [[1, 2, 1, 4, 5]];
@@ -227,7 +268,7 @@ describe("4.1: Ceres Search", () => {
             })
     })
 })
-describe.only("4.2: Ceres Search", () => {
+describe("4.2: Ceres Search", () => {
     const {parseGrid, findA, findDiagonalWords, countMASCross, searchXMAS} = require("../2024/4.2.js")
     it("should return data as an array of arrays of characters", () => {
         const data = "MMMSXXMASM\nMSAMXMSMSA\nAMXSXMAAMM\nMSAMASMSMX";

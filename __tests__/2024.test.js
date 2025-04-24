@@ -41,7 +41,7 @@ describe("1.1: Historian Hysteria", () => {
             })
     })
 })
-describe.only("1.2: Historian Hysteria", () => {
+describe("1.2: Historian Hysteria", () => {
     const { parseTable, filterUnique, createOccurenceReport, calculateSimilarityScore, findSimilarityScore} = require("../2024/1.2.js");
     it("should return an array with numbers from left column and right column split into two arrays.", () => {
         const data = "3   4\n4   3\n2   5\n1   3\n3   9\n3   3";
@@ -300,5 +300,14 @@ describe("4.2: Ceres Search", () => {
             .then(data => {
                 console.log(searchXMAS(data));
             })
+    })
+})
+describe.only("5.1: Print Queue", () => {
+    const {extract} = require("../2024/5.1.js")
+    it("should return rules and updates as an array of two arrays", async () => {
+        const data = await fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/5.test.txt", "utf-8")
+        const expected = [[[47,53],[97,13],[97,61],[97,47],[75,29],[61,13],[75,53],[29,13],[97,29],[53,29],[61,53],[97,53],[61,29],[47,13],[75,47],[97,75],[47,61],[75,61],[47,29],[75,13],[53,13]],[[75,47,61,53,29],[97,61,53,29,13],[75,29,13],[75,97,47,61,53],[61,13,29],[97,13,75,29,47]]]
+        const actual = extract(data)
+        expect(actual).toEqual(expected)
     })
 })

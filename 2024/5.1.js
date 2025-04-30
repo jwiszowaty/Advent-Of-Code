@@ -1,20 +1,50 @@
 //Identify the correct updates
 //// extract data
 const extract = (data) => {
-    const arrayText = data.split(/\n\n/)
-    const rulesText = arrayText[0]
-    const rulesArrayOfText = rulesText.split(/\n/)
-    const rulesArrayOfArrays = rulesArrayOfText.map(ruleText => ruleText.split("|").map(numberText => Number(numberText)))
-    const updatesText = arrayText[1]
-    const updatesArrayOfText = updatesText.split(/\n/)
-    const updatesArrayOfArrays = updatesArrayOfText.map(updateText => updateText.split(",").map(numberText => Number(numberText)))
-    return [rulesArrayOfArrays, updatesArrayOfArrays];
+    const [rulesText, updatesText] = data.split(/\n\n/)
+    const rules = rulesText
+        .split(/\n/)
+        .map(ruleText => ruleText.split("|").map(Number))
+    const updates = updatesText
+        .split(/\n/)
+        .map(updateText => updateText.split(",").map(Number))
+    return {rules, updates};
 }
-//// create an array for rules
-//// make each update an array
 //// check run rules against the update array using finding index of the numbers with rules array.indexOf(x)<array.indexOf(y)
-//// if a number doesn't appear in the update return true
-//// update is correctly ordered if all tests return true
-//// get its middle page number
-//Sum middle pages from correct updates
-module.exports = {extract}
+const filterUpdates = ({ rules, updates }) => {
+    
+    const numbersWithRules = new Set(rules.map(([x, y]) => x))
+    const isCorrect = (update) => {
+        //if the number in the array has lower index then the one related to the rule
+        for (let pageIndex = 0; pageIndex < update.length; pageIndex++) {
+            let page = update[pageIndex]
+            if (numbersWithRules.has(page)) {
+                const relevantRules = rules.filter(([x, y]) => x === page && update.includes(y))
+                for (const [x, y] of relevantRules) {
+                    if (pageIndex > update.indexOf(y)) {
+                        return false;
+                    };
+                }
+            };
+        }
+        return true;
+    }
+    const correctUpdates = updates.filter(update => isCorrect(update) === true)
+    return {correctUpdates};
+}
+const sumMiddlePages = (data) => {
+    let sum = 0;
+    for (const update of data.correctUpdates) {
+        //assumed all updates have an odd number of pages
+        const middlePage = Math.floor((update.length - 1) / 2)
+        sum+=update[middlePage]
+    }
+    return sum;
+}
+const findSumForUpdates = (data) => {
+    const refinedData = extract(data);
+    const correctUpdates = filterUpdates(refinedData);
+    const sum = sumMiddlePages(correctUpdates)
+    return sum;
+}
+module.exports = {extract, filterUpdates, sumMiddlePages, findSumForUpdates}

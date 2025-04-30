@@ -303,11 +303,29 @@ describe("4.2: Ceres Search", () => {
     })
 })
 describe.only("5.1: Print Queue", () => {
-    const {extract} = require("../2024/5.1.js")
+    const {extract, filterUpdates, sumMiddlePages, findSumForUpdates} = require("../2024/5.1.js")
     it("should return rules and updates as an array of two arrays", async () => {
         const data = await fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/5.test.txt", "utf-8")
-        const expected = [[[47,53],[97,13],[97,61],[97,47],[75,29],[61,13],[75,53],[29,13],[97,29],[53,29],[61,53],[97,53],[61,29],[47,13],[75,47],[97,75],[47,61],[75,61],[47,29],[75,13],[53,13]],[[75,47,61,53,29],[97,61,53,29,13],[75,29,13],[75,97,47,61,53],[61,13,29],[97,13,75,29,47]]]
+        const expected = { rules: [[47, 53], [97, 13], [97, 61], [97, 47], [75, 29], [61, 13], [75, 53], [29, 13], [97, 29], [53, 29], [61, 53], [97, 53], [61, 29], [47, 13], [75, 47], [97, 75], [47, 61], [75, 61], [47, 29], [75, 13], [53, 13]], updates: [[75, 47, 61, 53, 29], [97, 61, 53, 29, 13], [75, 29, 13], [75, 97, 47, 61, 53], [61, 13, 29], [97, 13, 75, 29, 47]]}
         const actual = extract(data)
         expect(actual).toEqual(expected)
+    })
+    it("should return only correctly ordered updates", async () => {
+        const data = { rules: [[47, 53], [97, 13], [97, 61], [97, 47], [75, 29], [61, 13], [75, 53], [29, 13], [97, 29], [53, 29], [61, 53], [97, 53], [61, 29], [47, 13], [75, 47], [97, 75], [47, 61], [75, 61], [47, 29], [75, 13], [53, 13]], updates: [[75, 47, 61, 53, 29], [97, 61, 53, 29, 13], [75, 29, 13], [75, 97, 47, 61, 53], [61, 13, 29], [97, 13, 75, 29, 47]]}
+        const expected = { correctUpdates: [[75, 47, 61, 53, 29], [97, 61, 53, 29, 13], [75, 29, 13]]}
+        const actual = filterUpdates(data)
+        expect(actual).toEqual(expected)
+    })
+    it("should return the sum of the middle number from each correctly ordered update", () => {
+        const data = { correctUpdates: [[75, 47, 61, 53, 29], [97, 61, 53, 29, 13], [75, 29, 13]]}
+        const expected = 143
+        const actual = sumMiddlePages(data)
+        expect(actual).toEqual(expected)
+    })
+    it("should provide correct number for 5.1", () => {
+        fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/5.txt", "utf-8")
+            .then(data => {
+                console.log(findSumForUpdates(data));
+            })
     })
 })

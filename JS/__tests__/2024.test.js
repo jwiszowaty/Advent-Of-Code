@@ -302,7 +302,7 @@ describe("4.2: Ceres Search", () => {
             })
     })
 })
-describe.only("5.1: Print Queue", () => {
+describe("5.1: Print Queue", () => {
     const {extract, filterUpdates, sumMiddlePages, findSumForUpdates} = require("../2024/5.1.js")
     it("should return rules and updates as an array of two arrays", async () => {
         const data = await fs.readFile("/Users/jakubwiszowaty/personal-projects/Advent Of Code/2024/5.test.txt", "utf-8")

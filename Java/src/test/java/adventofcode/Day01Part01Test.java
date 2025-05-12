@@ -10,6 +10,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class Day01Part01Test {
     @Test
+    public void testTextToGrid() {
+        String textInput ="4    9\n2    7\n3    8\n1    6\n0    5";
+        Integer[][] expectedGrid = {{4, 2, 3, 1, 0}, {9, 7, 8, 6, 5}};
+
+        Integer[][] actualGrid = Day01Part01.textToGrid(textInput);
+
+        assertArrayEquals(expectedGrid, actualGrid);
+    }
+    @Test
     public void testSortFlatArrayIntegers() {
         Integer[] unsortedIntegers = {4,2,3,1,0};
         Integer[] expectedSorted = {0, 1, 2, 3, 4};

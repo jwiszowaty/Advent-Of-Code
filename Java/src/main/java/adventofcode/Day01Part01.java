@@ -1,13 +1,32 @@
 package adventofcode;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Day01Part01 {
     public static void main(String[] args) {
 
+    }
+
+    public static Integer[][] textToGrid(String textInput) {
+
+        String[] rows = textInput.split("\n");
+        List<List<Integer>> rowsSplit = Arrays.stream(rows)
+                .map(row -> Arrays.stream(row.split(" {4}"))
+                        .map(Integer::parseInt)
+                        .toList()
+                )
+                .toList();
+        int numberOfRows = rowsSplit.size();
+        Integer[][] gridColumns = new Integer[2][numberOfRows];
+        for (int i = 0; i < rowsSplit.size(); i++) {
+                gridColumns[0][i] = rowsSplit.get(i).get(0);
+                gridColumns[1][i] = rowsSplit.get(i).get(1);
+        }
+        return gridColumns;
     }
 
     public static Integer[] sortIntegers(Integer[] unsortedIntegers) {
@@ -37,4 +56,5 @@ public class Day01Part01 {
     public static int sumAllAbsoluteDifferences(List<Integer> absoluteDiffs) {
         return  absoluteDiffs.stream().reduce(0, Integer::sum);
     }
+
 }

@@ -1,21 +1,27 @@
 package adventofcode;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Day01Part01 {
     public static void main(String[] args) {
-
+        System.out.println(findAnswer(args[0]));
     }
-
+    public static int findAnswer(String fileName) {
+        String rawData = accessDataFromFile(fileName);
+        Integer[][] grid = textToGrid(rawData);
+        Integer[][] sortedNumbersGrid = sortIntegers(grid);
+        List<Integer> absoluteDifferences = subtractIntegers(sortedNumbersGrid);
+        return sumAllAbsoluteDifferences(absoluteDifferences);
+    }
     public static Integer[][] textToGrid(String textInput) {
 
         String[] rows = textInput.split("\n");
         List<List<Integer>> rowsSplit = Arrays.stream(rows)
-                .map(row -> Arrays.stream(row.split(" {4}"))
+                .map(row -> Arrays.stream(row.split(" +"))
                         .map(Integer::parseInt)
                         .toList()
                 )
@@ -29,18 +35,12 @@ public class Day01Part01 {
         return gridColumns;
     }
 
-    public static Integer[] sortIntegers(Integer[] unsortedIntegers) {
-        Arrays.sort(unsortedIntegers);
-        return unsortedIntegers;
-    }
-
     public static Integer[][] sortIntegers(Integer[][] unsortedIntegers) {
         for (Integer[] unsortedInteger : unsortedIntegers) {
             Arrays.sort(unsortedInteger);
         }
         return unsortedIntegers;
     }
-
 
     public static List<Integer> subtractIntegers(Integer[][] sortedIntegers) {
         List<Integer> absoluteDifferences = new ArrayList<>(sortedIntegers[0].length);
@@ -57,4 +57,12 @@ public class Day01Part01 {
         return  absoluteDiffs.stream().reduce(0, Integer::sum);
     }
 
+    public static String accessDataFromFile(String fileName) {
+        try {
+            Path filePath = Path.of("/Users/jakubwiszowaty/personal-projects/Advent Of Code/Java/src/main/resources",fileName);
+            return Files.readString(filePath);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
